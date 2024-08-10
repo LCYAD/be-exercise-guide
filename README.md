@@ -3,9 +3,26 @@ A guide for creating BE exercise using the standard use case
 
 ## Introduction
 * In order to get familiar with writing different programming language and its respective framework, a common case study is being created here
+* Common tools will be provided in this repo
+    * migration script for DB table generation
+        * currently only doing it for Postgres
+    * seeder for populating DB with data
+* The BE server only needs to connect to the created DB then implement the business logic accordingly to its own design
 
 ## Scenario
-* A simple 
+* A scenario that is commonly used that involves an university where there are students, teachers, courses, exams etc.
+* Rules:
+    * a teacher works for a department
+    * a student studies in a department
+    * a department have many courses
+    * a student can enroll in many courses from different departments
+    * only one teacher can teach in a course
+    * a course can contain many students
+    * a course can have many assignments
+    * a student will make a submission for an assignment
+    * an assignment will be scored by a teacher
+    * a course can have many exams
+    * a exam will be scored by a single teacher
 
 
 ## ERP Diagram
