@@ -19,11 +19,9 @@ A guide for creating BE exercise using the standard use case
     * only one teacher can teach in a course
     * a course can contain many students
     * a course can have many assignments
-    * a student will make a submission for an assignment
-    * an assignment will be scored by a teacher
     * a course can have many exams
-    * a exam will be scored by a single teacher
-
+    * a student will make a submission for an assignment or an exam
+    * a submission will be scored by a teacher
 
 ## ERP Diagram
 ```mermaid
@@ -54,7 +52,6 @@ erDiagram
     course {
         int id PK
         string course_name
-        string description
         int department_id FK
         int teacher_id FK
     }
@@ -62,7 +59,7 @@ erDiagram
     assignment {
         int id PK
         string title
-        string description
+        tinyint type
         date assigned_at
         date due_date
         int course_id FK
@@ -103,8 +100,8 @@ erDiagram
     student ||--o{ enrollment : "enrolls"
     course ||--o{ enrollment : "contains"
     
-    student }o--|| department : "studies in"
-    teacher }o--|| department : "works for"
+    student }o--o| department : "studies in"
+    teacher }o--o| department : "works for"
     
     department ||--o{ course : "offers"
     
@@ -112,13 +109,31 @@ erDiagram
     course ||--o{ exam : "contains"
 
     student ||--o{ submission : "submits"
-    assignment ||--o{ submission : "contains"
+    assignment |o--o{ submission : "contains"
+    exam |o--o{ submission : "contains"
     
     submission ||--o| score : "receives"
-    exam ||--|| score : "receives"
     
     score }o--|| teacher : "is graded by"
     
     course }o--|| teacher : "is taught by"
-
 ```
+
+## How to use
+### Prerequisite
+* install [go-migrate CLI](https://github.com/golang-migrate/migrate) (use install via brew if MacOS)
+* have Docker installed so that we can use `docker-compose`
+
+## Start up Postgres Server and create tables
+* run `docker-compose up -d` to start up the postgres server (use `docker ps` to check)
+* run the following command to create the tables
+```bash
+migrate -path ./db/postgres_migrations/ -database "postgres://<username>:<password>@<domain>:<port>/<DB_name>>?sslmode=disable" up
+```
+
+## Clean up Tables and shut down Postgres server
+* run the following command to remove the tables
+```bash
+migrate -path ./db/postgres_migrations/ -database "postgres://<username>:<password>@<domain>:<port>/<DB_name>>?sslmode=disable" down
+```
+* run `docker-compose down` to shut down the postgres server (use `docker ps` to check)
