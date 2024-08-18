@@ -1,6 +1,9 @@
 CREATE TABLE department (
     id SERIAL PRIMARY KEY,
-    dept_name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE student (
@@ -9,7 +12,10 @@ CREATE TABLE student (
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     dob DATE NOT NULL,
-    department_id INT REFERENCES department(id) ON DELETE SET NULL
+    department_id INT REFERENCES department(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE teacher (
@@ -18,54 +24,78 @@ CREATE TABLE teacher (
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     dob DATE NOT NULL,
-    department_id INT REFERENCES department(id) ON DELETE SET NULL
+    department_id INT REFERENCES department(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE course (
     id SERIAL PRIMARY KEY,
-    course_name VARCHAR(255) NOT NULL,
-    department_id INT REFERENCES department(id) ON DELETE CASCADE,
-    teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL
+    name VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    department_id INT REFERENCES department(id) ON DELETE SET NULL,
+    teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
-CREATE TABLE score (
+CREATE TABLE enrollment (
     id SERIAL PRIMARY KEY,
-    value INT NOT NULL,
-    teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL
+    student_id INT REFERENCES student(id) ON DELETE CASCADE,
+    course_id INT REFERENCES course(id) ON DELETE CASCADE,
+    approved BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE assignment (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    description TEXT NULL,
     type SMALLINT NOT NULL,
-    assigned_at DATE NOT NULL,
     due_date DATE NOT NULL,
-    course_id INT REFERENCES course(id) ON DELETE CASCADE
+    course_id INT REFERENCES course(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE exam (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     type SMALLINT NOT NULL,
-    started_at TIMESTAMP NOT NULL,
-    finished_at TIMESTAMP NOT NULL,
-    course_id INT REFERENCES course(id) ON DELETE CASCADE
+    started_at TIMESTAMP,
+    finished_at TIMESTAMP,
+    course_id INT REFERENCES course(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE submission (
     id SERIAL PRIMARY KEY,
-    submitted_at DATE NOT NULL,
     student_id INT REFERENCES student(id) ON DELETE CASCADE,
     assignment_id INT REFERENCES assignment(id) ON DELETE CASCADE,
     exam_id INT REFERENCES exam(id) ON DELETE CASCADE,
-    score_id INT REFERENCES score(id) ON DELETE SET NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    CONSTRAINT check_only_one_foreign_key_can_exist
+    CHECK (
+        (assignment_id IS NOT NULL AND exam_id IS NULL) OR 
+        (assignment_id IS NULL AND exam_id IS NOT NULL)
+    )
 );
 
-
-CREATE TABLE enrollment (
-    enrollment_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES student(id) ON DELETE CASCADE,
-    course_id INT REFERENCES course(id) ON DELETE CASCADE,
-    submitted_at DATE NOT NULL,
-    approved BOOLEAN NOT NULL
+CREATE TABLE score (
+    id SERIAL PRIMARY KEY,
+    value INT NOT NULL,
+    teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL,
+    submission_id INT REFERENCES submission(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );

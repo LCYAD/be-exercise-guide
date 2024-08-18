@@ -23,7 +23,7 @@ A guide for creating BE exercise using the standard use case
     * a student will make a submission for an assignment or an exam
     * a submission will be scored by a teacher
 
-## ERP Diagram
+## ER Diagram
 ```mermaid
 erDiagram
     student {
@@ -31,13 +31,19 @@ erDiagram
         string first_name
         string last_name
         string email
-        int dob 
+        date dob 
         int department_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
     
     department {
         int id PK
-        string dept_name
+        string name
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
     
     teacher {
@@ -45,57 +51,78 @@ erDiagram
         string first_name
         string last_name
         string email
-        int dob 
+        date dob 
         int department_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
     
     course {
         int id PK
-        string course_name
+        string name
+        text description
         int department_id FK
         int teacher_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    enrollment {
+        int id PK
+        int student_id FK
+        int course_id FK
+        bool approved
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
     
     assignment {
         int id PK
         string title
+        text description
         tinyint type
-        date assigned_at
         date due_date
         int course_id FK
-        int score_id FK
-    }
-
-    submission {
-        int id PK
-        date submitted_at
-        int student_id FK
-        int assignment_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
     exam {
         int id PK
         string name
         tinyint type
-        date started_at
-        date finished_at
+        timestamp started_at
+        timestamp finished_at
         int course_id FK
-        int score_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    submission {
+        int id PK
+        int student_id FK
+        int assignment_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
 
     score {
         int id PK
         int value
         int teacher_id FK
+        int submission_id FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
     }
     
-    enrollment {
-        int enrollment_id PK
-        int student_id FK
-        int course_id FK
-        date submitted_at
-        bool approved
-    }
+
     
     student ||--o{ enrollment : "enrolls"
     course ||--o{ enrollment : "contains"
@@ -103,20 +130,20 @@ erDiagram
     student }o--o| department : "studies in"
     teacher }o--o| department : "works for"
     
-    department ||--o{ course : "offers"
+    department |o--o{ course : "offers"
     
     course ||--o{ assignment : "contains"
     course ||--o{ exam : "contains"
 
     student ||--o{ submission : "submits"
-    assignment |o--o{ submission : "contains"
-    exam |o--o{ submission : "contains"
+    assignment ||--o{ submission : "contains"
+    exam ||--o{ submission : "contains"
     
     submission ||--o| score : "receives"
     
-    score }o--|| teacher : "is graded by"
+    score }o--o| teacher : "is graded by"
     
-    course }o--|| teacher : "is taught by"
+    course }o--o| teacher : "is taught by"
 ```
 
 ## How to use
