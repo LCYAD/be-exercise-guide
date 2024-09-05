@@ -3,7 +3,8 @@ CREATE TABLE department (
     name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL
+    deleted_at TIMESTAMP NULL,
+    CONSTRAINT department_unique_name UNIQUE(name)
 );
 
 CREATE TABLE student (
@@ -38,7 +39,8 @@ CREATE TABLE course (
     teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL
+    deleted_at TIMESTAMP NULL,
+    CONSTRAINT course_unique_name UNIQUE(name)
 );
 
 CREATE TABLE enrollment (

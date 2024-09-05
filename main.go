@@ -1,14 +1,12 @@
 package main
 
 import (
+	"be-exerise-go-mod/seeder"
+	"be-exerise-go-mod/util"
 	"database/sql"
 	"fmt"
-	"time"
+	"os"
 
-	"be-exerise-go-mod/.gen/be-exercise/public/model"
-	. "be-exerise-go-mod/.gen/be-exercise/public/table"
-
-	"github.com/brianvoe/gofakeit/v7"
 	_ "github.com/lib/pq"
 )
 
@@ -21,36 +19,34 @@ const (
 )
 
 func main() {
-	gofakeit.Seed(0)
-	var departmentNames = []string{"Economic", "Finance", "Computer Science", "Biology", "Chemistry"}
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide 'up' or 'down' as an argument")
+		return
+	}
 
-	fmt.Println("Starting uploading to DB")
+	command := os.Args[1]
+
+	fmt.Println("Starting connection to DB")
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
-	panicOnError(err)
+	util.PanicOnError(err)
 	defer db.Close()
 
-	var departmentModelLinks []model.Department
-	for _, name := range departmentNames {
-		now := time.Now()
-		modelLink := model.Department{
-			Name:      name,
-			CreatedAt: &now,
-			UpdatedAt: &now,
-		}
-		departmentModelLinks = append(departmentModelLinks, modelLink)
-	}
-	insertStmt := Department.INSERT(Department.Name, Department.CreatedAt, Department.UpdatedAt).MODELS(departmentModelLinks)
-	_, err = insertStmt.Exec(db)
-	panicOnError(err)
-	fmt.Println("Finished uploading to DB")
-}
-
-func panicOnError(err error) {
-	if err != nil {
-		panic(err)
+	switch command {
+	case "up":
+		fmt.Println("Starting running seeders")
+		seeder.DepartmentSeeder(db)
+		seeder.StudentSeeder(db, 100)
+		seeder.TeacherSeeder(db, 20)
+		fmt.Println("Finished uploading to DB")
+	case "down":
+		fmt.Println("Starting running deseeder")
+		seeder.DeseedAll(db)
+		fmt.Println("Complete running deseeder")
+	default:
+		fmt.Println("Wrong command. Please use 'up' or 'down'")
 	}
 }
