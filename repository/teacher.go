@@ -13,30 +13,30 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetTeacherIDs(db *sql.DB) []int32 {
+func GetAllTeachers(db *sql.DB) []model.Teacher {
 	stmt := SELECT(
-		Teacher.ID,
+		Teacher.AllColumns,
 	).FROM(
 		Teacher,
 	)
 
-	var dest []struct {
-		model.Teacher
-	}
-
+	var dest []model.Teacher
 	err := stmt.Query(db, &dest)
 	util.PanicOnError(err)
 
-	ids := make([]int32, len(dest))
-	for i, d := range dest {
-		ids[i] = int32(d.Teacher.ID)
-	}
-
-	return ids
+	return dest
 }
 
 func InsertMultipleTeachers(db *sql.DB, teachers []model.Teacher) {
-	insertStmt := Teacher.INSERT(Teacher.FirstName, Teacher.LastName, Teacher.Dob, Teacher.Email, Teacher.DepartmentID, Teacher.CreatedAt, Teacher.UpdatedAt).MODELS(teachers)
+	insertStmt := Teacher.INSERT(
+		Teacher.FirstName,
+		Teacher.LastName,
+		Teacher.Dob,
+		Teacher.Email,
+		Teacher.DepartmentID,
+		Teacher.CreatedAt,
+		Teacher.UpdatedAt,
+	).MODELS(teachers)
 	_, err := insertStmt.Exec(db)
 	util.PanicOnError(err)
 }

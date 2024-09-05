@@ -13,23 +13,26 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetDepartmentIDs(db *sql.DB) []int32 {
+func GetAllDepartments(db *sql.DB) []model.Department {
 	stmt := SELECT(
-		Department.ID,
+		Department.AllColumns,
 	).FROM(
 		Department,
 	)
 
-	var dest []struct {
-		model.Department
-	}
-
+	var dest []model.Department
 	err := stmt.Query(db, &dest)
 	util.PanicOnError(err)
 
-	ids := make([]int32, len(dest))
-	for i, d := range dest {
-		ids[i] = int32(d.Department.ID)
+	return dest
+}
+
+func GetDepartmentIDs(db *sql.DB) []int32 {
+	var department = GetAllDepartments(db)
+
+	ids := make([]int32, len(department))
+	for i, d := range department {
+		ids[i] = int32(d.ID)
 	}
 
 	return ids
