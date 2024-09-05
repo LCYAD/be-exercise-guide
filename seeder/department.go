@@ -2,18 +2,29 @@ package seeder
 
 import (
 	"database/sql"
-	"time"
 	"fmt"
+	"time"
 
-	"be-exerise-go-mod/repository"
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
+	"be-exerise-go-mod/repository"
 )
 
 func DepartmentSeeder(db *sql.DB) {
-	var departmentNames = []string{"Economic", "Finance", "Computer Science", "Biology", "Chemistry"}
+	departmentNames := []string{
+		"Computer Science",
+		"Biology",
+		"Chemistry",
+		"Physics",
+		"Mathematics",
+		"Economics",
+		"English Literature",
+		"History",
+		"Psychology",
+		"Political Science",
+	}
 	var departmentModelLinks []model.Department
-	var departementIds = repository.GetDepartmentIDs(db)
-	if len(departementIds) == 0 {
+	departmentIds := repository.GetDepartmentIDs(db)
+	if len(departmentIds) == 0 {
 		for _, name := range departmentNames {
 			now := time.Now()
 			modelLink := model.Department{

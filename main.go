@@ -39,8 +39,9 @@ func main() {
 	case "up":
 		fmt.Println("Starting running seeders")
 		seeder.DepartmentSeeder(db)
-		seeder.StudentSeeder(db, 100)
-		seeder.TeacherSeeder(db, 20)
+		seeder.TeacherSeeder(db, 50)
+		seeder.CourseSeeder(db)
+		seeder.StudentSeeder(db, 400)
 		fmt.Println("Finished uploading to DB")
 	case "down":
 		fmt.Println("Starting running deseeder")
