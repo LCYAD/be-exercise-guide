@@ -29,7 +29,7 @@ func CourseSeeder(db *sql.DB) {
 
 		now := time.Now()
 		for _, d := range departments {
-			courses := DepartmentCourses[d.Name]
+			courses := departmentCourses[d.Name]
 			for _, c := range courses {
 				description := gofakeit.Paragraph(1, 10, 100, " ")
 				// might have cases where there is no teacher in the department that triggers course_teacher_id_fkey error
@@ -51,7 +51,7 @@ func CourseSeeder(db *sql.DB) {
 	}
 }
 
-var DepartmentCourses = map[string][]string{
+var departmentCourses = map[string][]string{
 	"Computer Science": {
 		"Introduction to Programming",
 		"Data Structures and Algorithms",

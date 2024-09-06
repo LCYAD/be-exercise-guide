@@ -9,6 +9,7 @@ import (
 )
 
 func DeseedAll(db *sql.DB) {
+	repository.ClearAllEnrollments(db)
 	repository.ClearAllStudents(db)
 	repository.ClearAllCourses(db)
 	repository.ClearAllTeachers(db)

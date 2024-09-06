@@ -13,6 +13,26 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func GetCourseIDs(db *sql.DB) []int32 {
+	stmt := SELECT(
+		Course.ID,
+	).FROM(
+		Course,
+	)
+
+	var dest []model.Course
+
+	err := stmt.Query(db, &dest)
+	util.PanicOnError(err)
+
+	ids := make([]int32, len(dest))
+	for i, d := range dest {
+		ids[i] = int32(d.ID)
+	}
+
+	return ids
+}
+
 func CourseExists(db *sql.DB) bool {
 	stmt := SELECT(
 		Course.ID,
