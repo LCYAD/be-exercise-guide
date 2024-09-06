@@ -11,11 +11,13 @@ import (
 )
 
 const (
-	host     = "localhost"
-	port     = 5432
-	user     = "root"
-	password = "root"
-	dbname   = "be-exercise"
+	host        = "localhost"
+	port        = 5432
+	user        = "root"
+	password    = "root"
+	dbname      = "be-exercise"
+	teacherSize = 100
+	studentSize = 1000
 )
 
 func main() {
@@ -39,9 +41,10 @@ func main() {
 	case "up":
 		fmt.Println("Starting running seeders")
 		seeder.DepartmentSeeder(db)
-		seeder.TeacherSeeder(db, 50)
+		seeder.TeacherSeeder(db, teacherSize)
 		seeder.CourseSeeder(db)
-		seeder.StudentSeeder(db, 400)
+		seeder.StudentSeeder(db, studentSize)
+		seeder.EnrollmentSeeder(db)
 		fmt.Println("Finished uploading to DB")
 	case "down":
 		fmt.Println("Starting running deseeder")

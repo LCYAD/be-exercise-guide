@@ -20,16 +20,14 @@ func GetStudentIDs(db *sql.DB) []int32 {
 		Student,
 	)
 
-	var dest []struct {
-		model.Student
-	}
+	var dest []model.Student
 
 	err := stmt.Query(db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
 	for i, d := range dest {
-		ids[i] = int32(d.Student.ID)
+		ids[i] = int32(d.ID)
 	}
 
 	return ids
