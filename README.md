@@ -23,6 +23,23 @@ A guide for creating BE exercise using the standard use case
     * a student will make a submission for an assignment or an exam
     * a submission will be scored by a teacher
 
+### Note
+* this is simpled version of the university course setup to keep backend exercise business logic thin
+* things completely ignored in this design
+    * no years of joining for students
+        * so cannot determine which year they are in
+    * no graduation related information and no date of acceptance
+    * no university application related information
+    * no student degree information
+        * so do not know if a student is here as  PhD, MPhil, Master, Bachelor and the time limit before they can complete their degree
+        * no limit on what course the student can join
+            * for example, there is a list of courses that could only be joined with elective groups for certain degree
+    * courses do not have levels (100, 200, 300, 400)
+        * not to create too many courses and prevent the need to setup prerequisite relationship between courses for enrollment
+    * courses do not have credit information
+        * mainly for calculating if a student can graduate or not
+* might consider down the road to create a separate exercise with more complex logic
+
 ## ER Diagram
 ```mermaid
 erDiagram
