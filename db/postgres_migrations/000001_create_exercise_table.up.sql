@@ -59,6 +59,7 @@ CREATE TABLE assignment (
     description TEXT NULL,
     type SMALLINT NOT NULL,
     due_date DATE NOT NULL,
+    graded BOOLEAN DEFAULT TRUE,
     course_id INT REFERENCES course(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -97,6 +98,27 @@ CREATE TABLE score (
     value INT NOT NULL,
     teacher_id INT REFERENCES teacher(id) ON DELETE SET NULL,
     submission_id INT REFERENCES submission(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+CREATE TABLE grade_setting (
+    id SERIAL PRIMARY KEY,
+    assignment_percent INT NOT NULL CHECK (assignment_percent BETWEEN 0 AND 100),
+    exam_percent INT NOT NULL CHECK (exam_percent BETWEEN 0 AND 100),
+    passing_grade INT NOT NULL CHECK (passing_grade BETWEEN 0 AND 100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    CONSTRAINT total_percent_check CHECK (assignment_percent + exam_percent = 100)
+);
+
+CREATE TABLE grade (
+    id SERIAL PRIMARY KEY,
+    enrollment_id INT REFERENCES enrollment(id) ON DELETE CASCADE,
+    value INT NOT NULL CHECK (value BETWEEN 0 AND 100),
+    passed BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL

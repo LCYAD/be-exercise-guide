@@ -22,6 +22,10 @@ A guide for creating BE exercise using the standard use case
     * a course can have many exams
     * a student will make a submission for an assignment or an exam
     * a submission will be scored by a teacher
+    * a grade will be determined for each student that enrolled in a course
+        * it will be determined by the assignment's score and also exam score, and the percentage for each partis controlled by the `grade_setting` table
+            * the total of the assignment and exam percentage should have a total of 100
+        * to keep it simple, there will only be value of the grade, which is determined by the assignment and exam score and if the student has passed or not will be determined by that value and the pass grade required by that course
 
 ### Note
 * this is simpled version of the university course setup to keep backend exercise business logic thin
@@ -103,6 +107,7 @@ erDiagram
         tinyint type
         date due_date
         int course_id FK
+        bool graded
         timestamp created_at
         timestamp updated_at
         timestamp deleted_at
@@ -138,8 +143,26 @@ erDiagram
         timestamp updated_at
         timestamp deleted_at
     }
-    
 
+    grade_setting {
+        int id PK
+        int assignment_percent "between 0 and 100"
+        int exam_percent "between 0 and 100"
+        int passing_grade "between 0 and 100"
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    grade {
+        int id PK
+        int enrollment_id FK
+        int value "between 0 and 100"
+        bool passed
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
     
     student ||--o{ enrollment : "enrolls"
     course ||--o{ enrollment : "contains"
@@ -161,6 +184,9 @@ erDiagram
     score }o--o| teacher : "is graded by"
     
     course }o--o| teacher : "is taught by"
+
+    course ||--|| grade_setting : "contains"
+    enrollment ||--o| grade : "contains"
 ```
 
 ## How to use
