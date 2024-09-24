@@ -17,6 +17,7 @@ type Assignment struct {
 	Description *string
 	Type        int16
 	DueDate     time.Time
+	Graded      *bool
 	CourseID    *int32
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
