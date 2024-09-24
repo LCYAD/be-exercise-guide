@@ -15,6 +15,8 @@ func UseSchema(schema string) {
 	Department = Department.FromSchema(schema)
 	Enrollment = Enrollment.FromSchema(schema)
 	Exam = Exam.FromSchema(schema)
+	Grade = Grade.FromSchema(schema)
+	GradeSetting = GradeSetting.FromSchema(schema)
 	SchemaMigrations = SchemaMigrations.FromSchema(schema)
 	Score = Score.FromSchema(schema)
 	Student = Student.FromSchema(schema)

@@ -22,6 +22,7 @@ type assignmentTable struct {
 	Description postgres.ColumnString
 	Type        postgres.ColumnInteger
 	DueDate     postgres.ColumnDate
+	Graded      postgres.ColumnBool
 	CourseID    postgres.ColumnInteger
 	CreatedAt   postgres.ColumnTimestamp
 	UpdatedAt   postgres.ColumnTimestamp
@@ -71,12 +72,13 @@ func newAssignmentTableImpl(schemaName, tableName, alias string) assignmentTable
 		DescriptionColumn = postgres.StringColumn("description")
 		TypeColumn        = postgres.IntegerColumn("type")
 		DueDateColumn     = postgres.DateColumn("due_date")
+		GradedColumn      = postgres.BoolColumn("graded")
 		CourseIDColumn    = postgres.IntegerColumn("course_id")
 		CreatedAtColumn   = postgres.TimestampColumn("created_at")
 		UpdatedAtColumn   = postgres.TimestampColumn("updated_at")
 		DeletedAtColumn   = postgres.TimestampColumn("deleted_at")
-		allColumns        = postgres.ColumnList{IDColumn, TitleColumn, DescriptionColumn, TypeColumn, DueDateColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
-		mutableColumns    = postgres.ColumnList{TitleColumn, DescriptionColumn, TypeColumn, DueDateColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		allColumns        = postgres.ColumnList{IDColumn, TitleColumn, DescriptionColumn, TypeColumn, DueDateColumn, GradedColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		mutableColumns    = postgres.ColumnList{TitleColumn, DescriptionColumn, TypeColumn, DueDateColumn, GradedColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
 	)
 
 	return assignmentTable{
@@ -88,6 +90,7 @@ func newAssignmentTableImpl(schemaName, tableName, alias string) assignmentTable
 		Description: DescriptionColumn,
 		Type:        TypeColumn,
 		DueDate:     DueDateColumn,
+		Graded:      GradedColumn,
 		CourseID:    CourseIDColumn,
 		CreatedAt:   CreatedAtColumn,
 		UpdatedAt:   UpdatedAtColumn,
