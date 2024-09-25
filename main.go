@@ -46,6 +46,7 @@ func main() {
 		seeder.StudentSeeder(db, studentSize)
 		seeder.EnrollmentSeeder(db)
 		seeder.AssignmentSeeder(db)
+		seeder.ExamSeeder(db)
 		fmt.Println("Finished uploading to DB")
 	case "down":
 		fmt.Println("Starting running deseeder")

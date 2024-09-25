@@ -11,6 +11,7 @@ import (
 func DeseedAll(db *sql.DB) {
 	repository.ClearAllScores(db)
 	repository.ClearAllSubmissions(db)
+	repository.ClearAllExams(db)
 	repository.ClearAllAssignments(db)
 	repository.ClearAllEnrollments(db)
 	repository.ClearAllStudents(db)
