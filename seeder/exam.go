@@ -29,10 +29,11 @@ func ExamSeeder(db *sql.DB) {
 			if name == "Final Exam" {
 				examType = 1
 			}
+			examStartAt := nextTestDate
 			modelLink := model.Exam{
 				Name:       name,
 				Type:       examType, // 0: midterm, 1: final
-				StartedAt:  &nextTestDate,
+				StartedAt:  &examStartAt,
 				FinishedAt: &finishedTime,
 				CourseID:   &courseID,
 				CreatedAt:  &now,

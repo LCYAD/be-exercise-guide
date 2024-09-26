@@ -33,6 +33,21 @@ func GetExamIDs(db *sql.DB) []int32 {
 	return ids
 }
 
+func GetExamsByCourseID(db *sql.DB, courseID int32) []model.Exam {
+	stmt := SELECT(
+		Exam.AllColumns,
+	).FROM(
+		Exam,
+	).WHERE(Exam.CourseID.EQ(Int32(courseID)))
+
+	var dest []model.Exam
+
+	err := stmt.Query(db, &dest)
+	util.PanicOnError(err)
+
+	return dest
+}
+
 func InsertMultipleExams(db *sql.DB, exams []model.Exam) {
 	insertStmt := Exam.INSERT(
 		Exam.Name,
