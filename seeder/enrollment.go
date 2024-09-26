@@ -23,7 +23,7 @@ func EnrollmentSeeder(db *sql.DB) {
 		pickedCourseIDs := pickRandomIDs(courseIDs, coursesEnroll)
 		now := time.Now()
 		for _, cIDs := range pickedCourseIDs {
-			if !repository.StudentEnrolledInCourse(db, studentID, cIDs) {
+			if !repository.IsStudentEnrolledInCourse(db, studentID, cIDs) {
 				modelLink := model.Enrollment{
 					StudentID: &studentID,
 					CourseID:  &cIDs,

@@ -33,6 +33,21 @@ func GetAssignmentIDs(db *sql.DB) []int32 {
 	return ids
 }
 
+func GetAssignmentsByCourseID(db *sql.DB, courseID int32) []model.Assignment {
+	stmt := SELECT(
+		Assignment.AllColumns,
+	).FROM(
+		Assignment,
+	).WHERE(Assignment.CourseID.EQ(Int32(courseID)))
+
+	var dest []model.Assignment
+
+	err := stmt.Query(db, &dest)
+	util.PanicOnError(err)
+
+	return dest
+}
+
 func InsertMultipleAssignments(db *sql.DB, assignments []model.Assignment) {
 	insertStmt := Assignment.INSERT(
 		Assignment.Title,
