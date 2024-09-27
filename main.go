@@ -48,6 +48,7 @@ func main() {
 		seeder.AssignmentSeeder(db)
 		seeder.ExamSeeder(db)
 		seeder.SubmissionSeeder(db)
+		seeder.ScoreSeeder(db)
 		fmt.Println("Finished uploading to DB")
 	case "down":
 		fmt.Println("Starting running deseeder")

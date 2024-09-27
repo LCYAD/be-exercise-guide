@@ -129,6 +129,7 @@ erDiagram
         int id PK
         int student_id FK
         int assignment_id FK
+        int exam_id FK
         timestamp created_at
         timestamp updated_at
         timestamp deleted_at
