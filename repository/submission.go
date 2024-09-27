@@ -13,24 +13,58 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetSubmissionIDs(db *sql.DB) []int32 {
-	stmt := SELECT(
-		Submission.ID,
-	).FROM(
-		Submission,
-	)
+type SubmissionRes struct {
+	ID           int32
+	DepartmentID int32
+}
 
-	var dest []model.Submission
+func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
+	var res []SubmissionRes
+	var dest []struct {
+		model.Submission
+		Course *model.Course `json:"Course"`
+	}
+	// couldn't get the 2 left join on both assignment and exam with course to work.  Maybe have another look at it when have time
+	stmt := SELECT(
+		Submission.AllColumns,
+		Course.AllColumns,
+	).FROM(
+		Submission.
+			LEFT_JOIN(Assignment, Submission.AssignmentID.EQ(Assignment.ID)).
+			LEFT_JOIN(Course, Assignment.CourseID.EQ(Course.ID)),
+	).WHERE(Submission.AssignmentID.IS_NOT_NULL())
 
 	err := stmt.Query(db, &dest)
 	util.PanicOnError(err)
 
-	ids := make([]int32, len(dest))
-	for i, d := range dest {
-		ids[i] = int32(d.ID)
+	// TODO: skip the ones with submission time after assignment due date?
+	for _, c := range dest {
+		res = append(res, SubmissionRes{ID: int32(c.ID), DepartmentID: *c.Course.DepartmentID})
 	}
 
-	return ids
+	// empty array
+	dest = []struct {
+		model.Submission
+		Course *model.Course `json:"Course"`
+	}{}
+
+	stmt = SELECT(
+		Submission.AllColumns,
+		Course.AllColumns,
+	).FROM(
+		Submission.
+			LEFT_JOIN(Exam, Submission.ExamID.EQ(Exam.ID)).
+			LEFT_JOIN(Course, Exam.CourseID.EQ(Course.ID)),
+	).WHERE(Submission.ExamID.IS_NOT_NULL())
+
+	err = stmt.Query(db, &dest)
+	util.PanicOnError(err)
+
+	for _, c := range dest {
+		res = append(res, SubmissionRes{ID: int32(c.ID), DepartmentID: *c.Course.DepartmentID})
+	}
+
+	return res
 }
 
 func InsertMultipleSubmissions(db *sql.DB, submissions []model.Submission) {

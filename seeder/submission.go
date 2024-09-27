@@ -60,8 +60,6 @@ func SubmissionSeeder(db *sql.DB) {
 		}
 		batch := submissionModelLinks[i:end]
 		repository.InsertMultipleSubmissions(db, batch)
-
-		fmt.Printf("Inserted batch %d to %d of submissions\n", i, end-1)
 	}
 
 	fmt.Println("Finish seeding Submission")
