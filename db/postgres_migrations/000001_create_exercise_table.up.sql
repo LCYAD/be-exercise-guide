@@ -83,6 +83,7 @@ CREATE TABLE submission (
     student_id INT REFERENCES student(id) ON DELETE CASCADE,
     assignment_id INT REFERENCES assignment(id) ON DELETE CASCADE,
     exam_id INT REFERENCES exam(id) ON DELETE CASCADE,
+    submitted_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL,

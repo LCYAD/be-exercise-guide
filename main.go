@@ -39,7 +39,7 @@ func main() {
 
 	switch command {
 	case "up":
-		fmt.Println("Starting running seeders")
+		fmt.Println("----- Starting running seeders -----")
 		seeder.DepartmentSeeder(db)
 		seeder.TeacherSeeder(db, teacherSize)
 		seeder.CourseSeeder(db)
@@ -49,11 +49,11 @@ func main() {
 		seeder.ExamSeeder(db)
 		seeder.SubmissionSeeder(db)
 		seeder.ScoreSeeder(db)
-		fmt.Println("Finished uploading to DB")
+		fmt.Println("----- Finished running seeder -----")
 	case "down":
-		fmt.Println("Starting running deseeder")
+		fmt.Println("----- Starting running deseeder -----")
 		seeder.DeseedAll(db)
-		fmt.Println("Complete running deseeder")
+		fmt.Println("----- Complete running deseeder -----")
 	default:
 		fmt.Println("Wrong command. Please use 'up' or 'down'")
 	}

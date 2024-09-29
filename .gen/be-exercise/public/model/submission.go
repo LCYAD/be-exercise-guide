@@ -16,6 +16,7 @@ type Submission struct {
 	StudentID    *int32
 	AssignmentID *int32
 	ExamID       *int32
+	SubmittedAt  time.Time
 	CreatedAt    *time.Time
 	UpdatedAt    *time.Time
 	DeletedAt    *time.Time
