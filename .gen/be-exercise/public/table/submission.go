@@ -21,6 +21,7 @@ type submissionTable struct {
 	StudentID    postgres.ColumnInteger
 	AssignmentID postgres.ColumnInteger
 	ExamID       postgres.ColumnInteger
+	SubmittedAt  postgres.ColumnTimestamp
 	CreatedAt    postgres.ColumnTimestamp
 	UpdatedAt    postgres.ColumnTimestamp
 	DeletedAt    postgres.ColumnTimestamp
@@ -68,11 +69,12 @@ func newSubmissionTableImpl(schemaName, tableName, alias string) submissionTable
 		StudentIDColumn    = postgres.IntegerColumn("student_id")
 		AssignmentIDColumn = postgres.IntegerColumn("assignment_id")
 		ExamIDColumn       = postgres.IntegerColumn("exam_id")
+		SubmittedAtColumn  = postgres.TimestampColumn("submitted_at")
 		CreatedAtColumn    = postgres.TimestampColumn("created_at")
 		UpdatedAtColumn    = postgres.TimestampColumn("updated_at")
 		DeletedAtColumn    = postgres.TimestampColumn("deleted_at")
-		allColumns         = postgres.ColumnList{IDColumn, StudentIDColumn, AssignmentIDColumn, ExamIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
-		mutableColumns     = postgres.ColumnList{StudentIDColumn, AssignmentIDColumn, ExamIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		allColumns         = postgres.ColumnList{IDColumn, StudentIDColumn, AssignmentIDColumn, ExamIDColumn, SubmittedAtColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		mutableColumns     = postgres.ColumnList{StudentIDColumn, AssignmentIDColumn, ExamIDColumn, SubmittedAtColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
 	)
 
 	return submissionTable{
@@ -83,6 +85,7 @@ func newSubmissionTableImpl(schemaName, tableName, alias string) submissionTable
 		StudentID:    StudentIDColumn,
 		AssignmentID: AssignmentIDColumn,
 		ExamID:       ExamIDColumn,
+		SubmittedAt:  SubmittedAtColumn,
 		CreatedAt:    CreatedAtColumn,
 		UpdatedAt:    UpdatedAtColumn,
 		DeletedAt:    DeletedAtColumn,

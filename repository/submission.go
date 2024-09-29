@@ -68,7 +68,14 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 }
 
 func InsertMultipleSubmissions(db *sql.DB, submissions []model.Submission) {
-	insertStmt := Submission.INSERT(Submission.StudentID, Submission.AssignmentID, Submission.ExamID, Submission.CreatedAt, Submission.UpdatedAt).MODELS(submissions)
+	insertStmt := Submission.INSERT(
+		Submission.StudentID,
+		Submission.AssignmentID,
+		Submission.ExamID,
+		Submission.SubmittedAt,
+		Submission.CreatedAt,
+		Submission.UpdatedAt,
+	).MODELS(submissions)
 	_, err := insertStmt.Exec(db)
 	util.PanicOnError(err)
 }

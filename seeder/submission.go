@@ -14,6 +14,7 @@ func SubmissionSeeder(db *sql.DB) {
 	chanceOfSubmission := []bool{true, true, true, true, true, true, true, true, true, false}
 	courseIDs := repository.GetCourseIDs(db)
 	var submissionModelLinks []model.Submission
+	now := time.Now()
 	for _, courseId := range courseIDs {
 		studentIDs := repository.GetStudentIDsEnrolledInCourse(db, courseId)
 		assignments := repository.GetAssignmentsByCourseID(db, courseId)
@@ -26,8 +27,9 @@ func SubmissionSeeder(db *sql.DB) {
 					modelLink := model.Submission{
 						StudentID:    &studentId,
 						AssignmentID: &assignment.ID,
-						CreatedAt:    &submissionTime,
-						UpdatedAt:    &submissionTime,
+						SubmittedAt:  submissionTime,
+						CreatedAt:    &now,
+						UpdatedAt:    &now,
 					}
 					submissionModelLinks = append(submissionModelLinks, modelLink)
 				}
@@ -37,12 +39,13 @@ func SubmissionSeeder(db *sql.DB) {
 			for _, studentId := range studentIDs {
 				willSubmitAssignment := chanceOfSubmission[rand.Intn(len(chanceOfSubmission))]
 				if willSubmitAssignment {
-					submissionTime := exam.StartedAt.Add(time.Duration(rand.Intn(2)) * time.Hour)
 					modelLink := model.Submission{
 						StudentID: &studentId,
 						ExamID:    &exam.ID,
-						CreatedAt: &submissionTime,
-						UpdatedAt: &submissionTime,
+						// assumption is that most people at the exam hall will submit at the end of the exam
+						SubmittedAt: *exam.FinishedAt,
+						CreatedAt:   &now,
+						UpdatedAt:   &now,
 					}
 					submissionModelLinks = append(submissionModelLinks, modelLink)
 				}
