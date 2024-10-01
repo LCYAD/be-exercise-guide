@@ -43,6 +43,7 @@ func main() {
 		seeder.DepartmentSeeder(db)
 		seeder.TeacherSeeder(db, teacherSize)
 		seeder.CourseSeeder(db)
+		seeder.GradeSettingSeeder(db)
 		seeder.StudentSeeder(db, studentSize)
 		seeder.EnrollmentSeeder(db)
 		seeder.AssignmentSeeder(db)

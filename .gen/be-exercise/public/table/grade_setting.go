@@ -21,6 +21,7 @@ type gradeSettingTable struct {
 	AssignmentPercent postgres.ColumnInteger
 	ExamPercent       postgres.ColumnInteger
 	PassingGrade      postgres.ColumnInteger
+	CourseID          postgres.ColumnInteger
 	CreatedAt         postgres.ColumnTimestamp
 	UpdatedAt         postgres.ColumnTimestamp
 	DeletedAt         postgres.ColumnTimestamp
@@ -68,11 +69,12 @@ func newGradeSettingTableImpl(schemaName, tableName, alias string) gradeSettingT
 		AssignmentPercentColumn = postgres.IntegerColumn("assignment_percent")
 		ExamPercentColumn       = postgres.IntegerColumn("exam_percent")
 		PassingGradeColumn      = postgres.IntegerColumn("passing_grade")
+		CourseIDColumn          = postgres.IntegerColumn("course_id")
 		CreatedAtColumn         = postgres.TimestampColumn("created_at")
 		UpdatedAtColumn         = postgres.TimestampColumn("updated_at")
 		DeletedAtColumn         = postgres.TimestampColumn("deleted_at")
-		allColumns              = postgres.ColumnList{IDColumn, AssignmentPercentColumn, ExamPercentColumn, PassingGradeColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
-		mutableColumns          = postgres.ColumnList{AssignmentPercentColumn, ExamPercentColumn, PassingGradeColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		allColumns              = postgres.ColumnList{IDColumn, AssignmentPercentColumn, ExamPercentColumn, PassingGradeColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
+		mutableColumns          = postgres.ColumnList{AssignmentPercentColumn, ExamPercentColumn, PassingGradeColumn, CourseIDColumn, CreatedAtColumn, UpdatedAtColumn, DeletedAtColumn}
 	)
 
 	return gradeSettingTable{
@@ -83,6 +85,7 @@ func newGradeSettingTableImpl(schemaName, tableName, alias string) gradeSettingT
 		AssignmentPercent: AssignmentPercentColumn,
 		ExamPercent:       ExamPercentColumn,
 		PassingGrade:      PassingGradeColumn,
+		CourseID:          CourseIDColumn,
 		CreatedAt:         CreatedAtColumn,
 		UpdatedAt:         UpdatedAtColumn,
 		DeletedAt:         DeletedAtColumn,

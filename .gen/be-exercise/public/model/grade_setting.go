@@ -16,6 +16,7 @@ type GradeSetting struct {
 	AssignmentPercent int32
 	ExamPercent       int32
 	PassingGrade      int32
+	CourseID          *int32
 	CreatedAt         *time.Time
 	UpdatedAt         *time.Time
 	DeletedAt         *time.Time

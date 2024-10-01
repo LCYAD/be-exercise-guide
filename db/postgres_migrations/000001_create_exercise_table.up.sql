@@ -109,6 +109,7 @@ CREATE TABLE grade_setting (
     assignment_percent INT NOT NULL CHECK (assignment_percent BETWEEN 0 AND 100),
     exam_percent INT NOT NULL CHECK (exam_percent BETWEEN 0 AND 100),
     passing_grade INT NOT NULL CHECK (passing_grade BETWEEN 0 AND 100),
+    course_id INT REFERENCES course(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL,
