@@ -20,11 +20,11 @@ func StudentSeeder(db *sql.DB, num int32) {
 
 	var studentModelLinks []model.Student
 	for range num {
-		now := time.Now()
+		now := time.Now().UTC()
 		modelLink := model.Student{
 			FirstName:    gofakeit.FirstName(),
 			LastName:     gofakeit.LastName(),
-			Dob:          gofakeit.DateRange(time.Now().AddDate(-50, 0, 0), time.Now().AddDate(-20, 0, 0)),
+			Dob:          gofakeit.DateRange(now.AddDate(-50, 0, 0), now.AddDate(-20, 0, 0)),
 			Email:        gofakeit.Email(),
 			DepartmentID: &departmentIds[rand.Intn(len(departmentIds))],
 			CreatedAt:    &now,

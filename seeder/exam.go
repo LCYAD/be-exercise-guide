@@ -20,7 +20,7 @@ func ExamSeeder(db *sql.DB) {
 
 	var examModelLinks []model.Exam
 	for _, courseID := range courseIDs {
-		now := time.Now().UTC().Round(time.Hour)
+		now := time.Now().UTC().UTC().Round(time.Hour)
 		nextTestDate := now.AddDate(0, 0, rand.Intn(50)+30)
 		for _, name := range examNames {
 			hoursToAdd := rand.Intn(2) + 1
