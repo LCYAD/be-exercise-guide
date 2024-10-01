@@ -26,7 +26,7 @@ func DepartmentSeeder(db *sql.DB) {
 	departmentIds := repository.GetDepartmentIDs(db)
 	if len(departmentIds) == 0 {
 		for _, name := range departmentNames {
-			now := time.Now()
+			now := time.Now().UTC()
 			modelLink := model.Department{
 				Name:      name,
 				CreatedAt: &now,

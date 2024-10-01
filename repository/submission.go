@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
 	. "be-exerise-go-mod/.gen/be-exercise/public/table"
@@ -14,19 +15,24 @@ import (
 )
 
 type SubmissionRes struct {
-	ID           int32
-	DepartmentID int32
+	ID                int32
+	DepartmentID      int32
+	SubmittedAt       time.Time
+	AssignmentDueDate time.Time
+	IsAssignment      bool
 }
 
 func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 	var res []SubmissionRes
 	var dest []struct {
 		model.Submission
-		Course *model.Course `json:"Course"`
+		Assignment *model.Assignment `json:"Assignment"`
+		Course     *model.Course     `json:"Course"`
 	}
 	// couldn't get the 2 left join on both assignment and exam with course to work.  Maybe have another look at it when have time
 	stmt := SELECT(
 		Submission.AllColumns,
+		Assignment.AllColumns,
 		Course.AllColumns,
 	).FROM(
 		Submission.
@@ -37,15 +43,21 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 	err := stmt.Query(db, &dest)
 	util.PanicOnError(err)
 
-	// TODO: skip the ones with submission time after assignment due date?
 	for _, c := range dest {
-		res = append(res, SubmissionRes{ID: int32(c.ID), DepartmentID: *c.Course.DepartmentID})
+		res = append(res, SubmissionRes{
+			ID:                int32(c.ID),
+			DepartmentID:      *c.Course.DepartmentID,
+			SubmittedAt:       c.Submission.SubmittedAt,
+			AssignmentDueDate: c.Assignment.DueDate,
+			IsAssignment:      true,
+		})
 	}
 
 	// empty array
 	dest = []struct {
 		model.Submission
-		Course *model.Course `json:"Course"`
+		Assignment *model.Assignment `json:"Assignment"`
+		Course     *model.Course     `json:"Course"`
 	}{}
 
 	stmt = SELECT(
@@ -61,7 +73,13 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 	util.PanicOnError(err)
 
 	for _, c := range dest {
-		res = append(res, SubmissionRes{ID: int32(c.ID), DepartmentID: *c.Course.DepartmentID})
+		res = append(res, SubmissionRes{
+			ID:                int32(c.ID),
+			DepartmentID:      *c.Course.DepartmentID,
+			SubmittedAt:       c.Submission.SubmittedAt,
+			AssignmentDueDate: time.Time{},
+			IsAssignment:      false,
+		})
 	}
 
 	return res

@@ -33,10 +33,10 @@ func AssignmentSeeder(db *sql.DB) {
 	var assignmentModelLinks []model.Assignment
 	for _, courseID := range courseIDs {
 		numAssignmentToCreate := rand.Intn(2) + minAssignmentCount
-		now := time.Now()
+		now := time.Now().UTC()
 		for range numAssignmentToCreate {
 			description := gofakeit.Sentence(50)
-			daysToAdd := rand.Intn(10) + 2
+			daysToAdd := rand.Intn(10) + 3
 			modelLink := model.Assignment{
 				Title:       gofakeit.RandomString(randomTitles),
 				Description: &description,

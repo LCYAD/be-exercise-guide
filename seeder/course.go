@@ -27,7 +27,7 @@ func CourseSeeder(db *sql.DB) {
 			teachersByDepartment[deptID] = append(teachersByDepartment[deptID], int32(teacher.ID))
 		}
 
-		now := time.Now()
+		now := time.Now().UTC()
 		for _, d := range departments {
 			courses := departmentCourses[d.Name]
 			for _, c := range courses {

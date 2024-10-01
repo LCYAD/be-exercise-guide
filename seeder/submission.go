@@ -14,7 +14,7 @@ func SubmissionSeeder(db *sql.DB) {
 	chanceOfSubmission := []bool{true, true, true, true, true, true, true, true, true, false}
 	courseIDs := repository.GetCourseIDs(db)
 	var submissionModelLinks []model.Submission
-	now := time.Now()
+	now := time.Now().UTC()
 	for _, courseId := range courseIDs {
 		studentIDs := repository.GetStudentIDsEnrolledInCourse(db, courseId)
 		assignments := repository.GetAssignmentsByCourseID(db, courseId)
