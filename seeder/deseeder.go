@@ -15,6 +15,7 @@ func DeseedAll(db *sql.DB) {
 	repository.ClearAllAssignments(db)
 	repository.ClearAllEnrollments(db)
 	repository.ClearAllStudents(db)
+	repository.ClearAllGradeSettings(db)
 	repository.ClearAllCourses(db)
 	repository.ClearAllTeachers(db)
 	repository.ClearAllDepartments(db)
