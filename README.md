@@ -203,6 +203,17 @@ erDiagram
 migrate -path ./db/postgres_migrations/ -database "postgres://<username>:<password>@<domain>:<port>/<DB_name>>?sslmode=disable" up
 ```
 
+## Seeding & Deseeding the DB
+* Make sure the tables are created
+* run the command to seed DB
+```bash
+go run main.go up
+```
+* run the command to deseed DB
+```bash
+go run main.go down
+```
+
 ## Clean up Tables and shut down Postgres server
 * run the following command to remove the tables
 ```bash
