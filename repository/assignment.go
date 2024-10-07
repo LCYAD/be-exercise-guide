@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetAssignmentIDs(db *sql.DB) []int32 {
+type assignmentRepository struct {
+	db *sql.DB
+}
+
+func NewAssignmentRepository(db *sql.DB) *assignmentRepository {
+	return &assignmentRepository{
+		db: db,
+	}
+}
+
+func (r *assignmentRepository) GetAssignmentIDs() []int32 {
 	stmt := SELECT(
 		Assignment.ID,
 	).FROM(
@@ -22,7 +32,7 @@ func GetAssignmentIDs(db *sql.DB) []int32 {
 
 	var dest []model.Assignment
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
@@ -33,7 +43,7 @@ func GetAssignmentIDs(db *sql.DB) []int32 {
 	return ids
 }
 
-func GetAssignmentsByCourseID(db *sql.DB, courseID int32) []model.Assignment {
+func (r *assignmentRepository) GetAssignmentsByCourseID(courseID int32) []model.Assignment {
 	stmt := SELECT(
 		Assignment.AllColumns,
 	).FROM(
@@ -42,13 +52,13 @@ func GetAssignmentsByCourseID(db *sql.DB, courseID int32) []model.Assignment {
 
 	var dest []model.Assignment
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	return dest
 }
 
-func InsertMultipleAssignments(db *sql.DB, assignments []model.Assignment) {
+func (r *assignmentRepository) InsertMultipleAssignments(assignments []model.Assignment) {
 	insertStmt := Assignment.INSERT(
 		Assignment.Title,
 		Assignment.Description,
@@ -59,12 +69,12 @@ func InsertMultipleAssignments(db *sql.DB, assignments []model.Assignment) {
 		Assignment.CreatedAt,
 		Assignment.UpdatedAt,
 	).MODELS(assignments)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllAssignments(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE assignment RESTART IDENTITY CASCADE")
+func (r *assignmentRepository) ClearAllAssignments() {
+	_, err := r.db.Exec("TRUNCATE TABLE assignment RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating assignment table and reset auto increment")
 }

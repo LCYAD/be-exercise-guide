@@ -50,6 +50,8 @@ func AssignmentSeeder(db *sql.DB) {
 			assignmentModelLinks = append(assignmentModelLinks, modelLink)
 		}
 	}
-	repository.InsertMultipleAssignments(db, assignmentModelLinks)
+	// TODO clean up repository struct creation (perhaps from main then pass along the seeding flow?)
+	assignmentRepo := repository.NewAssignmentRepository(db)
+	assignmentRepo.InsertMultipleAssignments(assignmentModelLinks)
 	fmt.Println("Finish seeding Assignment")
 }
