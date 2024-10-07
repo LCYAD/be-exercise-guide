@@ -1,8 +1,12 @@
 package repository
 
 import (
-	"github.com/DATA-DOG/go-sqlmock"
+	"reflect"
 	"testing"
+
+	"be-exerise-go-mod/.gen/be-exercise/public/model"
+
+	"github.com/DATA-DOG/go-sqlmock"
 )
 
 func TestGetAssignmentIDs(t *testing.T) {
@@ -31,10 +35,44 @@ func TestGetAssignmentIDs(t *testing.T) {
 		t.Errorf("expected %d IDs, got %d", len(expectedIDs), len(ids))
 	}
 
-	for i, id := range expectedIDs {
-		if ids[i] != id {
-			t.Errorf("expected ID %d, got %d", id, ids[i])
-		}
+	if !reflect.DeepEqual(ids, expectedIDs) {
+		t.Errorf("output doesn't match")
+	}
+
+	// Ensure all expectations were met
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
+}
+
+func TestGetAssignmentsByCourseID(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("failed to create mock database: %s", err)
+	}
+	defer db.Close()
+
+	repo := NewAssignmentRepository(db)
+
+	mockRows := sqlmock.NewRows([]string{"assignment.id", "assignment.title", "assignment.type"}).
+		AddRow(1, "test", 0)
+
+	mock.ExpectQuery(`SELECT assignment\..*FROM public\.assignment WHERE assignment\.course_id = \$1`).
+		WithArgs(1).
+		WillReturnRows(mockRows)
+
+	assignments := repo.GetAssignmentsByCourseID(1)
+
+	expectedRes := []model.Assignment{
+		{ID: 1, Title: "test", Type: 0},
+	}
+
+	if len(assignments) != len(expectedRes) {
+		t.Errorf("expected %d assignments, got %d", len(assignments), len(expectedRes))
+	}
+
+	if !reflect.DeepEqual(assignments, expectedRes) {
+		t.Errorf("output doesn't match")
 	}
 
 	// Ensure all expectations were met
