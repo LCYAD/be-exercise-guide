@@ -12,7 +12,8 @@ import (
 
 func ScoreSeeder(db *sql.DB) {
 	submissions := repository.GetSubmissionIDsAndDepartmentIDs(db)
-	teachers := repository.GetAllTeachers(db)
+	teacherRepository := repository.NewTeacherRepository(db)
+	teachers := teacherRepository.GetAllTeachers()
 
 	// group teacher by department
 	teachersByDepartment := make(map[int32][]int32)

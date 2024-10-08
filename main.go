@@ -40,8 +40,9 @@ func main() {
 	switch command {
 	case "up":
 		fmt.Println("----- Starting running seeders -----")
+		teacherSeeder := seeder.NewTeacherSeeder(db)
 		seeder.DepartmentSeeder(db)
-		seeder.TeacherSeeder(db, teacherSize)
+		teacherSeeder.TeacherSeeder(teacherSize)
 		seeder.CourseSeeder(db)
 		seeder.GradeSettingSeeder(db)
 		seeder.StudentSeeder(db, studentSize)

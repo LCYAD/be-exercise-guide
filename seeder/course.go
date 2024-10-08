@@ -18,7 +18,8 @@ func CourseSeeder(db *sql.DB) {
 	} else {
 		var courseModelLinks []model.Course
 		departments := repository.GetAllDepartments(db)
-		teachers := repository.GetAllTeachers(db)
+		teacherRepository := repository.NewTeacherRepository(db)
+		teachers := teacherRepository.GetAllTeachers()
 
 		// group teacher by department
 		teachersByDepartment := make(map[int32][]int32)
