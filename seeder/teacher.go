@@ -15,8 +15,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func TeacherSeeder(db *sql.DB, num int32) {
-	var departmentIds = repository.GetDepartmentIDs(db)
+type teacherSeeder struct {
+	db *sql.DB
+}
+
+func NewTeacherSeeder(db *sql.DB) *teacherSeeder {
+	return &teacherSeeder{db: db}
+}
+
+func (s *teacherSeeder) TeacherSeeder(num int32) {
+	var departmentIds = repository.GetDepartmentIDs(s.db)
 
 	var teacherModelLinks []model.Teacher
 	for range num {
@@ -32,6 +40,7 @@ func TeacherSeeder(db *sql.DB, num int32) {
 		}
 		teacherModelLinks = append(teacherModelLinks, modelLink)
 	}
-	repository.InsertMultipleTeachers(db, teacherModelLinks)
+	teacherRepository := repository.NewTeacherRepository(s.db)
+	teacherRepository.InsertMultipleTeachers(teacherModelLinks)
 	fmt.Println("Finish seeding Teachers")
 }

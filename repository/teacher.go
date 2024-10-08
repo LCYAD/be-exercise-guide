@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetAllTeachers(db *sql.DB) []model.Teacher {
+type teacherRepository struct {
+	db *sql.DB
+}
+
+func NewTeacherRepository(db *sql.DB) *teacherRepository {
+	return &teacherRepository{
+		db: db,
+	}
+}
+
+func (r *teacherRepository) GetAllTeachers() []model.Teacher {
 	stmt := SELECT(
 		Teacher.AllColumns,
 	).FROM(
@@ -21,13 +31,13 @@ func GetAllTeachers(db *sql.DB) []model.Teacher {
 	)
 
 	var dest []model.Teacher
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	return dest
 }
 
-func InsertMultipleTeachers(db *sql.DB, teachers []model.Teacher) {
+func (r *teacherRepository) InsertMultipleTeachers(teachers []model.Teacher) {
 	insertStmt := Teacher.INSERT(
 		Teacher.FirstName,
 		Teacher.LastName,
@@ -37,12 +47,12 @@ func InsertMultipleTeachers(db *sql.DB, teachers []model.Teacher) {
 		Teacher.CreatedAt,
 		Teacher.UpdatedAt,
 	).MODELS(teachers)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllTeachers(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE teacher RESTART IDENTITY CASCADE")
+func (r *teacherRepository) ClearAllTeachers() {
+	_, err := r.db.Exec("TRUNCATE TABLE teacher RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating teacher table and reset auto increment")
 }
