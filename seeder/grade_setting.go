@@ -11,7 +11,8 @@ import (
 )
 
 func GradeSettingSeeder(db *sql.DB) {
-	courseIDs := repository.GetCourseIDs(db)
+	courseRepository := repository.NewCourseRepository(db)
+	courseIDs := courseRepository.GetCourseIDs()
 	var gradeSettingModelLinks []model.GradeSetting
 	now := time.Now().UTC()
 

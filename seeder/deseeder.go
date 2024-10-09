@@ -14,6 +14,7 @@ func DeseedAll(db *sql.DB) {
 	teacherRepository := repository.NewTeacherRepository(db)
 	studentRepository := repository.NewStudentRepository(db)
 	departmentRepository := repository.NewDepartmentRepository(db)
+	courseRepository := repository.NewCourseRepository(db)
 
 	repository.ClearAllScores(db)
 	repository.ClearAllSubmissions(db)
@@ -22,7 +23,7 @@ func DeseedAll(db *sql.DB) {
 	repository.ClearAllEnrollments(db)
 	studentRepository.ClearAllStudents()
 	repository.ClearAllGradeSettings(db)
-	repository.ClearAllCourses(db)
+	courseRepository.ClearAllCourses()
 	teacherRepository.ClearAllTeachers()
 	departmentRepository.ClearAllDepartments()
 }

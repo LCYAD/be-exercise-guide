@@ -12,7 +12,9 @@ import (
 
 func SubmissionSeeder(db *sql.DB) {
 	chanceOfSubmission := []bool{true, true, true, true, true, true, true, true, true, false}
-	courseIDs := repository.GetCourseIDs(db)
+	courseRepository := repository.NewCourseRepository(db)
+
+	courseIDs := courseRepository.GetCourseIDs()
 	// Create repo struct here, u may refactor it later
 	assignmentRepo := repository.NewAssignmentRepository(db)
 	var submissionModelLinks []model.Submission

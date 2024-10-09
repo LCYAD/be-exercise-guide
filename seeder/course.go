@@ -13,7 +13,8 @@ import (
 )
 
 func CourseSeeder(db *sql.DB) {
-	if repository.CourseExists(db) {
+	courseRepository := repository.NewCourseRepository(db)
+	if courseRepository.CourseExists() {
 		fmt.Println("Already created Courses.  Skipping....")
 	} else {
 		var courseModelLinks []model.Course
@@ -48,7 +49,7 @@ func CourseSeeder(db *sql.DB) {
 			}
 
 		}
-		repository.InsertMultipleCourses(db, courseModelLinks)
+		courseRepository.InsertMultipleCourses(courseModelLinks)
 		fmt.Println("Finish seeding Course")
 	}
 }
