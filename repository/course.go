@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetCourseIDs(db *sql.DB) []int32 {
+type courseRepository struct {
+	db *sql.DB
+}
+
+func NewCourseRepository(db *sql.DB) *courseRepository {
+	return &courseRepository{
+		db: db,
+	}
+}
+
+func (r *courseRepository) GetCourseIDs() []int32 {
 	stmt := SELECT(
 		Course.ID,
 	).FROM(
@@ -22,7 +32,7 @@ func GetCourseIDs(db *sql.DB) []int32 {
 
 	var dest []model.Course
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
@@ -33,7 +43,7 @@ func GetCourseIDs(db *sql.DB) []int32 {
 	return ids
 }
 
-func CourseExists(db *sql.DB) bool {
+func (r *courseRepository) CourseExists() bool {
 	stmt := SELECT(
 		Course.ID,
 	).FROM(
@@ -42,13 +52,13 @@ func CourseExists(db *sql.DB) bool {
 
 	var dest []model.Course
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	return len(dest) > 0
 }
 
-func InsertMultipleCourses(db *sql.DB, departments []model.Course) {
+func (r *courseRepository) InsertMultipleCourses(departments []model.Course) {
 	insertStmt := Course.INSERT(
 		Course.Name,
 		Course.Description,
@@ -57,12 +67,12 @@ func InsertMultipleCourses(db *sql.DB, departments []model.Course) {
 		Course.CreatedAt,
 		Course.UpdatedAt,
 	).MODELS(departments)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllCourses(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE course RESTART IDENTITY CASCADE")
+func (r *courseRepository) ClearAllCourses() {
+	_, err := r.db.Exec("TRUNCATE TABLE course RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating course table and reset auto increment")
 }

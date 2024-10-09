@@ -11,7 +11,8 @@ import (
 )
 
 func ExamSeeder(db *sql.DB) {
-	courseIDs := repository.GetCourseIDs(db)
+	courseRepository := repository.NewCourseRepository(db)
+	courseIDs := courseRepository.GetCourseIDs()
 	examNames := []string{
 		"Midterm Exam 1",
 		"Midterm Exam 2",

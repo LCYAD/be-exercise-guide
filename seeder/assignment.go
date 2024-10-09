@@ -14,7 +14,8 @@ import (
 
 func AssignmentSeeder(db *sql.DB) {
 	minAssignmentCount := 3
-	courseIDs := repository.GetCourseIDs(db)
+	courseRepository := repository.NewCourseRepository(db)
+	courseIDs := courseRepository.GetCourseIDs()
 	// increasing the ratio to approved vs false to 6:1
 	gradedOption := []bool{true, true, true, true, true, false}
 	randomTitles := []string{
