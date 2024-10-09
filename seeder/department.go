@@ -22,8 +22,9 @@ func DepartmentSeeder(db *sql.DB) {
 		"Psychology",
 		"Political Science",
 	}
+	departmentRepository := repository.NewDepartmentRepository(db)
 	var departmentModelLinks []model.Department
-	departmentIds := repository.GetDepartmentIDs(db)
+	departmentIds := departmentRepository.GetDepartmentIDs()
 	if len(departmentIds) == 0 {
 		for _, name := range departmentNames {
 			now := time.Now().UTC()
@@ -34,7 +35,7 @@ func DepartmentSeeder(db *sql.DB) {
 			}
 			departmentModelLinks = append(departmentModelLinks, modelLink)
 		}
-		repository.InsertMultipleDepartments(db, departmentModelLinks)
+		departmentRepository.InsertMultipleDepartments(departmentModelLinks)
 		fmt.Println("Finish seeding Department")
 	} else {
 		fmt.Println("Already created Departments.  Skipping....")
