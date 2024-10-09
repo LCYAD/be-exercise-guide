@@ -24,7 +24,8 @@ func NewTeacherSeeder(db *sql.DB) *teacherSeeder {
 }
 
 func (s *teacherSeeder) TeacherSeeder(num int32) {
-	var departmentIds = repository.GetDepartmentIDs(s.db)
+	departmentRepository := repository.NewDepartmentRepository(s.db)
+	departmentIds := departmentRepository.GetDepartmentIDs()
 
 	var teacherModelLinks []model.Teacher
 	for range num {

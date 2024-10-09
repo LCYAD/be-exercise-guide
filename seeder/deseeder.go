@@ -9,18 +9,20 @@ import (
 )
 
 func DeseedAll(db *sql.DB) {
-	repository.ClearAllScores(db)
-	repository.ClearAllSubmissions(db)
-	repository.ClearAllExams(db)
 	// TODO maybe just pass along repository struct pointer
 	assignmentRepo := repository.NewAssignmentRepository(db)
 	teacherRepository := repository.NewTeacherRepository(db)
 	studentRepository := repository.NewStudentRepository(db)
+	departmentRepository := repository.NewDepartmentRepository(db)
+
+	repository.ClearAllScores(db)
+	repository.ClearAllSubmissions(db)
+	repository.ClearAllExams(db)
 	assignmentRepo.ClearAllAssignments()
 	repository.ClearAllEnrollments(db)
 	studentRepository.ClearAllStudents()
 	repository.ClearAllGradeSettings(db)
 	repository.ClearAllCourses(db)
 	teacherRepository.ClearAllTeachers()
-	repository.ClearAllDepartments(db)
+	departmentRepository.ClearAllDepartments()
 }

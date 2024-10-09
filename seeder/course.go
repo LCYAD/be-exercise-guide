@@ -17,7 +17,8 @@ func CourseSeeder(db *sql.DB) {
 		fmt.Println("Already created Courses.  Skipping....")
 	} else {
 		var courseModelLinks []model.Course
-		departments := repository.GetAllDepartments(db)
+		departmentRepository := repository.NewDepartmentRepository(db)
+		departments := departmentRepository.GetAllDepartments()
 		teacherRepository := repository.NewTeacherRepository(db)
 		teachers := teacherRepository.GetAllTeachers()
 

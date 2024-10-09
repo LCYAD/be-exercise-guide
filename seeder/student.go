@@ -16,7 +16,8 @@ import (
 )
 
 func StudentSeeder(db *sql.DB, num int32) {
-	var departmentIds = repository.GetDepartmentIDs(db)
+	departmentRepository := repository.NewDepartmentRepository(db)
+	var departmentIds = departmentRepository.GetDepartmentIDs()
 
 	var studentModelLinks []model.Student
 	for range num {

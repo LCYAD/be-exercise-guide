@@ -23,7 +23,8 @@ func TestGetAllTeachers(t *testing.T) {
 
 	now := time.Now()
 
-	mockRows := sqlmock.NewRows([]string{"teacher.id",
+	mockRows := sqlmock.NewRows([]string{
+		"teacher.id",
 		"teacher.first_name",
 		"teacher.last_name",
 		"teacher.email",
