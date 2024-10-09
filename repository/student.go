@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetStudentIDs(db *sql.DB) []int32 {
+type studentRepository struct {
+	db *sql.DB
+}
+
+func NewStudentRepository(db *sql.DB) *studentRepository {
+	return &studentRepository{
+		db: db,
+	}
+}
+
+func (r *studentRepository) GetStudentIDs() []int32 {
 	stmt := SELECT(
 		Student.ID,
 	).FROM(
@@ -22,7 +32,7 @@ func GetStudentIDs(db *sql.DB) []int32 {
 
 	var dest []model.Student
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
@@ -33,14 +43,14 @@ func GetStudentIDs(db *sql.DB) []int32 {
 	return ids
 }
 
-func InsertMultipleStudents(db *sql.DB, students []model.Student) {
+func (r *studentRepository) InsertMultipleStudents(students []model.Student) {
 	insertStmt := Student.INSERT(Student.FirstName, Student.LastName, Student.Dob, Student.Email, Student.DepartmentID, Student.CreatedAt, Student.UpdatedAt).MODELS(students)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllStudents(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE student RESTART IDENTITY CASCADE")
+func (r *studentRepository) ClearAllStudents() {
+	_, err := r.db.Exec("TRUNCATE TABLE student RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating student table and reset auto increment")
 }

@@ -12,7 +12,8 @@ import (
 
 func EnrollmentSeeder(db *sql.DB) {
 	minCourseEnroll := 3
-	studentIDs := repository.GetStudentIDs(db)
+	studentRepository := repository.NewStudentRepository(db)
+	studentIDs := studentRepository.GetStudentIDs()
 	courseIDs := repository.GetCourseIDs(db)
 	// increasing the ratio to approved vs false to 4:1
 	approvedOption := []bool{true, true, true, false}

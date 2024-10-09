@@ -32,6 +32,7 @@ func StudentSeeder(db *sql.DB, num int32) {
 		}
 		studentModelLinks = append(studentModelLinks, modelLink)
 	}
-	repository.InsertMultipleStudents(db, studentModelLinks)
+	studentRepository := repository.NewStudentRepository(db)
+	studentRepository.InsertMultipleStudents(studentModelLinks)
 	fmt.Println("Finish seeding Students")
 }
