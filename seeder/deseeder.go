@@ -15,9 +15,10 @@ func DeseedAll(db *sql.DB) {
 	// TODO maybe just pass along repository struct pointer
 	assignmentRepo := repository.NewAssignmentRepository(db)
 	teacherRepository := repository.NewTeacherRepository(db)
+	studentRepository := repository.NewStudentRepository(db)
 	assignmentRepo.ClearAllAssignments()
 	repository.ClearAllEnrollments(db)
-	repository.ClearAllStudents(db)
+	studentRepository.ClearAllStudents()
 	repository.ClearAllGradeSettings(db)
 	repository.ClearAllCourses(db)
 	teacherRepository.ClearAllTeachers()
