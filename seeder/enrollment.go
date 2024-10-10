@@ -18,6 +18,7 @@ func EnrollmentSeeder(db *sql.DB) {
 	courseIDs := courseRepository.GetCourseIDs()
 	// increasing the ratio to approved vs false to 4:1
 	approvedOption := []bool{true, true, true, false}
+	enrollmentRepository := repository.NewEnrollmentRepository(db)
 
 	var enrollmentModelLinks []model.Enrollment
 	for _, studentID := range studentIDs {
@@ -25,7 +26,7 @@ func EnrollmentSeeder(db *sql.DB) {
 		pickedCourseIDs := pickRandomIDs(courseIDs, coursesEnroll)
 		now := time.Now().UTC()
 		for _, cIDs := range pickedCourseIDs {
-			if !repository.IsStudentEnrolledInCourse(db, studentID, cIDs) {
+			if !enrollmentRepository.IsStudentEnrolledInCourse(studentID, cIDs) {
 				modelLink := model.Enrollment{
 					StudentID: &studentID,
 					CourseID:  &cIDs,
@@ -37,7 +38,7 @@ func EnrollmentSeeder(db *sql.DB) {
 			}
 		}
 	}
-	repository.InsertMultipleEnrollments(db, enrollmentModelLinks)
+	enrollmentRepository.InsertMultipleEnrollments(enrollmentModelLinks)
 	fmt.Println("Finish seeding Enrollment")
 }
 

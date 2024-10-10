@@ -17,10 +17,12 @@ func SubmissionSeeder(db *sql.DB) {
 	courseIDs := courseRepository.GetCourseIDs()
 	// Create repo struct here, u may refactor it later
 	assignmentRepo := repository.NewAssignmentRepository(db)
+	enrollmentRepository := repository.NewEnrollmentRepository(db)
 	var submissionModelLinks []model.Submission
 	now := time.Now().UTC()
+
 	for _, courseId := range courseIDs {
-		studentIDs := repository.GetStudentIDsEnrolledInCourse(db, courseId)
+		studentIDs := enrollmentRepository.GetStudentIDsEnrolledInCourse(courseId)
 		assignments := assignmentRepo.GetAssignmentsByCourseID(courseId)
 		exams := repository.GetExamsByCourseID(db, courseId)
 		for _, assignment := range assignments {
