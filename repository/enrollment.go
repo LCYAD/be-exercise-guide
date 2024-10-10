@@ -13,8 +13,18 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type enrollmentRepository struct {
+	db *sql.DB
+}
+
+func NewEnrollmentRepository(db *sql.DB) *enrollmentRepository {
+	return &enrollmentRepository{
+		db: db,
+	}
+}
+
 // TODO: anyway to extract model.Student.ID type?
-func IsStudentEnrolledInCourse(db *sql.DB, studentID int32, courseID int32) bool {
+func (r *enrollmentRepository) IsStudentEnrolledInCourse(studentID int32, courseID int32) bool {
 	stmt := SELECT(
 		Enrollment.ID,
 	).FROM(
@@ -23,13 +33,13 @@ func IsStudentEnrolledInCourse(db *sql.DB, studentID int32, courseID int32) bool
 
 	var dest []model.Enrollment
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	return len(dest) > 0
 }
 
-func GetStudentIDsEnrolledInCourse(db *sql.DB, courseID int32) []int32 {
+func (r *enrollmentRepository) GetStudentIDsEnrolledInCourse(courseID int32) []int32 {
 	stmt := SELECT(
 		Enrollment.StudentID,
 	).FROM(
@@ -38,7 +48,7 @@ func GetStudentIDsEnrolledInCourse(db *sql.DB, courseID int32) []int32 {
 
 	var dest []model.Enrollment
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	studentIds := make([]int32, len(dest))
@@ -49,7 +59,7 @@ func GetStudentIDsEnrolledInCourse(db *sql.DB, courseID int32) []int32 {
 	return studentIds
 }
 
-func InsertMultipleEnrollments(db *sql.DB, enrollments []model.Enrollment) {
+func (r *enrollmentRepository) InsertMultipleEnrollments(enrollments []model.Enrollment) {
 	insertStmt := Enrollment.INSERT(
 		Enrollment.StudentID,
 		Enrollment.CourseID,
@@ -57,12 +67,12 @@ func InsertMultipleEnrollments(db *sql.DB, enrollments []model.Enrollment) {
 		Enrollment.CreatedAt,
 		Enrollment.UpdatedAt,
 	).MODELS(enrollments)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllEnrollments(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE enrollment RESTART IDENTITY CASCADE")
+func (r *enrollmentRepository) ClearAllEnrollments() {
+	_, err := r.db.Exec("TRUNCATE TABLE enrollment RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating enrollment table and reset auto increment")
 }
