@@ -12,6 +12,7 @@ import (
 
 func GradeSettingSeeder(db *sql.DB) {
 	courseRepository := repository.NewCourseRepository(db)
+	gradeSettingRepository := repository.NewGradeSettingRepository(db)
 	courseIDs := courseRepository.GetCourseIDs()
 	var gradeSettingModelLinks []model.GradeSetting
 	now := time.Now().UTC()
@@ -31,6 +32,6 @@ func GradeSettingSeeder(db *sql.DB) {
 		}
 		gradeSettingModelLinks = append(gradeSettingModelLinks, modelLink)
 	}
-	repository.InsertMultipleGradeSettings(db, gradeSettingModelLinks)
+	gradeSettingRepository.InsertMultipleGradeSettings(gradeSettingModelLinks)
 	fmt.Println("Finish seeding GradeSetting")
 }
