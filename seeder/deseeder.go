@@ -18,8 +18,9 @@ func DeseedAll(db *sql.DB) {
 	enrollmentRepository := repository.NewEnrollmentRepository(db)
 	gradeSettingRepository := repository.NewGradeSettingRepository(db)
 	examRepository := repository.NewExamRepository(db)
+	scoreRepository := repository.NewScoreRepository(db)
 
-	repository.ClearAllScores(db)
+	scoreRepository.ClearAllScores()
 	repository.ClearAllSubmissions(db)
 	examRepository.ClearAllExams()
 	assignmentRepo.ClearAllAssignments()
