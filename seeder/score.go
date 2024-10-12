@@ -13,6 +13,7 @@ import (
 func ScoreSeeder(db *sql.DB) {
 	submissions := repository.GetSubmissionIDsAndDepartmentIDs(db)
 	teacherRepository := repository.NewTeacherRepository(db)
+	scoreRepository := repository.NewScoreRepository(db)
 	teachers := teacherRepository.GetAllTeachers()
 
 	// group teacher by department
@@ -48,7 +49,7 @@ func ScoreSeeder(db *sql.DB) {
 			end = len(scoreModelLinks)
 		}
 		batch := scoreModelLinks[i:end]
-		repository.InsertMultipleScores(db, batch)
+		scoreRepository.InsertMultipleScores(batch)
 	}
 
 	fmt.Println("Finish seeding Score")

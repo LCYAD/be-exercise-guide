@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetScoreIDs(db *sql.DB) []int32 {
+type scoreRepository struct {
+	db *sql.DB
+}
+
+func NewScoreRepository(db *sql.DB) *scoreRepository {
+	return &scoreRepository{
+		db: db,
+	}
+}
+
+func (r *scoreRepository) GetScoreIDs() []int32 {
 	stmt := SELECT(
 		Score.ID,
 	).FROM(
@@ -22,7 +32,7 @@ func GetScoreIDs(db *sql.DB) []int32 {
 
 	var dest []model.Score
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
@@ -33,14 +43,14 @@ func GetScoreIDs(db *sql.DB) []int32 {
 	return ids
 }
 
-func InsertMultipleScores(db *sql.DB, scores []model.Score) {
+func (r *scoreRepository) InsertMultipleScores(scores []model.Score) {
 	insertStmt := Score.INSERT(Score.Value, Score.TeacherID, Score.SubmissionID, Score.CreatedAt, Score.UpdatedAt).MODELS(scores)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllScores(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE score RESTART IDENTITY CASCADE")
+func (r *scoreRepository) ClearAllScores() {
+	_, err := r.db.Exec("TRUNCATE TABLE score RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating score table and reset auto increment")
 }
