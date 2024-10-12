@@ -13,7 +13,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func GetExamIDs(db *sql.DB) []int32 {
+type examRepository struct {
+	db *sql.DB
+}
+
+func NewExamRepository(db *sql.DB) *examRepository {
+	return &examRepository{
+		db: db,
+	}
+}
+
+func (r *examRepository) GetExamIDs() []int32 {
 	stmt := SELECT(
 		Exam.ID,
 	).FROM(
@@ -22,7 +32,7 @@ func GetExamIDs(db *sql.DB) []int32 {
 
 	var dest []model.Exam
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	ids := make([]int32, len(dest))
@@ -33,7 +43,7 @@ func GetExamIDs(db *sql.DB) []int32 {
 	return ids
 }
 
-func GetExamsByCourseID(db *sql.DB, courseID int32) []model.Exam {
+func (r *examRepository) GetExamsByCourseID(courseID int32) []model.Exam {
 	stmt := SELECT(
 		Exam.AllColumns,
 	).FROM(
@@ -42,13 +52,13 @@ func GetExamsByCourseID(db *sql.DB, courseID int32) []model.Exam {
 
 	var dest []model.Exam
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	return dest
 }
 
-func InsertMultipleExams(db *sql.DB, exams []model.Exam) {
+func (r *examRepository) InsertMultipleExams(exams []model.Exam) {
 	insertStmt := Exam.INSERT(
 		Exam.Name,
 		Exam.Type,
@@ -58,12 +68,12 @@ func InsertMultipleExams(db *sql.DB, exams []model.Exam) {
 		Exam.CreatedAt,
 		Exam.UpdatedAt,
 	).MODELS(exams)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllExams(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE exam RESTART IDENTITY CASCADE")
+func (r *examRepository) ClearAllExams() {
+	_, err := r.db.Exec("TRUNCATE TABLE exam RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating exam table and reset auto increment")
 }

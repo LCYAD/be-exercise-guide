@@ -13,6 +13,7 @@ import (
 func SubmissionSeeder(db *sql.DB) {
 	chanceOfSubmission := []bool{true, true, true, true, true, true, true, true, true, false}
 	courseRepository := repository.NewCourseRepository(db)
+	examRepository := repository.NewExamRepository(db)
 
 	courseIDs := courseRepository.GetCourseIDs()
 	// Create repo struct here, u may refactor it later
@@ -24,7 +25,7 @@ func SubmissionSeeder(db *sql.DB) {
 	for _, courseId := range courseIDs {
 		studentIDs := enrollmentRepository.GetStudentIDsEnrolledInCourse(courseId)
 		assignments := assignmentRepo.GetAssignmentsByCourseID(courseId)
-		exams := repository.GetExamsByCourseID(db, courseId)
+		exams := examRepository.GetExamsByCourseID(courseId)
 		for _, assignment := range assignments {
 			for _, studentId := range studentIDs {
 				willSubmitAssignment := chanceOfSubmission[rand.Intn(len(chanceOfSubmission))]

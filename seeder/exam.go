@@ -12,6 +12,7 @@ import (
 
 func ExamSeeder(db *sql.DB) {
 	courseRepository := repository.NewCourseRepository(db)
+	examRepository := repository.NewExamRepository(db)
 	courseIDs := courseRepository.GetCourseIDs()
 	examNames := []string{
 		"Midterm Exam 1",
@@ -45,6 +46,6 @@ func ExamSeeder(db *sql.DB) {
 			nextTestDate = nextTestDate.AddDate(0, 0, rand.Intn(50)+30)
 		}
 	}
-	repository.InsertMultipleExams(db, examModelLinks)
+	examRepository.InsertMultipleExams(examModelLinks)
 	fmt.Println("Finish seeding Exam")
 }
