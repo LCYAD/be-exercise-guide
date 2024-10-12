@@ -14,6 +14,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type submissionRepository struct {
+	db *sql.DB
+}
+
 type SubmissionRes struct {
 	ID                int32
 	DepartmentID      int32
@@ -22,7 +26,13 @@ type SubmissionRes struct {
 	IsAssignment      bool
 }
 
-func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
+func NewSubmissionRepository(db *sql.DB) *submissionRepository {
+	return &submissionRepository{
+		db: db,
+	}
+}
+
+func (r *submissionRepository) GetSubmissionIDsAndDepartmentIDs() []SubmissionRes {
 	var res []SubmissionRes
 	var dest []struct {
 		model.Submission
@@ -40,14 +50,14 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 			LEFT_JOIN(Course, Assignment.CourseID.EQ(Course.ID)),
 	).WHERE(Submission.AssignmentID.IS_NOT_NULL())
 
-	err := stmt.Query(db, &dest)
+	err := stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	for _, c := range dest {
 		res = append(res, SubmissionRes{
 			ID:                int32(c.ID),
 			DepartmentID:      *c.Course.DepartmentID,
-			SubmittedAt:       c.Submission.SubmittedAt,
+			SubmittedAt:       c.SubmittedAt,
 			AssignmentDueDate: c.Assignment.DueDate,
 			IsAssignment:      true,
 		})
@@ -69,14 +79,14 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 			LEFT_JOIN(Course, Exam.CourseID.EQ(Course.ID)),
 	).WHERE(Submission.ExamID.IS_NOT_NULL())
 
-	err = stmt.Query(db, &dest)
+	err = stmt.Query(r.db, &dest)
 	util.PanicOnError(err)
 
 	for _, c := range dest {
 		res = append(res, SubmissionRes{
 			ID:                int32(c.ID),
 			DepartmentID:      *c.Course.DepartmentID,
-			SubmittedAt:       c.Submission.SubmittedAt,
+			SubmittedAt:       c.SubmittedAt,
 			AssignmentDueDate: time.Time{},
 			IsAssignment:      false,
 		})
@@ -85,7 +95,7 @@ func GetSubmissionIDsAndDepartmentIDs(db *sql.DB) []SubmissionRes {
 	return res
 }
 
-func InsertMultipleSubmissions(db *sql.DB, submissions []model.Submission) {
+func (r *submissionRepository) InsertMultipleSubmissions(submissions []model.Submission) {
 	insertStmt := Submission.INSERT(
 		Submission.StudentID,
 		Submission.AssignmentID,
@@ -94,12 +104,12 @@ func InsertMultipleSubmissions(db *sql.DB, submissions []model.Submission) {
 		Submission.CreatedAt,
 		Submission.UpdatedAt,
 	).MODELS(submissions)
-	_, err := insertStmt.Exec(db)
+	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }
 
-func ClearAllSubmissions(db *sql.DB) {
-	_, err := db.Exec("TRUNCATE TABLE submission RESTART IDENTITY CASCADE")
+func (r *submissionRepository) ClearAllSubmissions() {
+	_, err := r.db.Exec("TRUNCATE TABLE submission RESTART IDENTITY CASCADE")
 	util.PanicOnError(err)
 	fmt.Println("Complete truncating submission table and reset auto increment")
 }
