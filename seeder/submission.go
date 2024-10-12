@@ -14,6 +14,7 @@ func SubmissionSeeder(db *sql.DB) {
 	chanceOfSubmission := []bool{true, true, true, true, true, true, true, true, true, false}
 	courseRepository := repository.NewCourseRepository(db)
 	examRepository := repository.NewExamRepository(db)
+	submissionRepository := repository.NewSubmissionRepository(db)
 
 	courseIDs := courseRepository.GetCourseIDs()
 	// Create repo struct here, u may refactor it later
@@ -69,7 +70,7 @@ func SubmissionSeeder(db *sql.DB) {
 			end = len(submissionModelLinks)
 		}
 		batch := submissionModelLinks[i:end]
-		repository.InsertMultipleSubmissions(db, batch)
+		submissionRepository.InsertMultipleSubmissions(batch)
 	}
 
 	fmt.Println("Finish seeding Submission")
