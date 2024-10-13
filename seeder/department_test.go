@@ -22,14 +22,18 @@ func (m *mockDepartmentRepository) InsertMultipleDepartments(departmentModel []m
 	m.Called(departmentModel)
 }
 
-func TestSeed(t *testing.T) {
-	mockRepo := new(mockDepartmentRepository)
+func (m *mockDepartmentRepository) ClearAllDepartments() {
+	m.Called()
+}
+
+func TestDepartmentSeed(t *testing.T) {
+	mockDepartmentRepo := new(mockDepartmentRepository)
 
 	t.Run("Will Seed Department", func(t *testing.T) {
 		// TODO: look into time mocking in Go, currently the result time do not point to the same address
 		now := time.Now().UTC()
-		mockRepo.On("GetDepartmentIDs").Return([]int32{})
-		mockRepo.On("InsertMultipleDepartments", mock.Anything).Run(func(args mock.Arguments) {
+		mockDepartmentRepo.On("GetDepartmentIDs").Return([]int32{})
+		mockDepartmentRepo.On("InsertMultipleDepartments", mock.Anything).Run(func(args mock.Arguments) {
 			departmentModel := args[0].([]model.Department)
 			expectedRes := []model.Department{
 				{Name: "Computer Science", CreatedAt: &now, UpdatedAt: &now},
@@ -50,19 +54,19 @@ func TestSeed(t *testing.T) {
 				t.Errorf("Input do not match")
 			}
 		})
-		s := NewDepartmentSeeder(mockRepo)
+		s := NewDepartmentSeeder(mockDepartmentRepo)
 		s.Seed()
 
-		mockRepo.AssertExpectations(t)
+		mockDepartmentRepo.AssertExpectations(t)
 	})
 	t.Run("Will Skip Seeding", func(t *testing.T) {
-		mockRepo := new(mockDepartmentRepository)
-		mockRepo.On("GetDepartmentIDs").Return([]int32{1})
+		mockDepartmentRepo := new(mockDepartmentRepository)
+		mockDepartmentRepo.On("GetDepartmentIDs").Return([]int32{1})
 
-		s := NewDepartmentSeeder(mockRepo)
+		s := NewDepartmentSeeder(mockDepartmentRepo)
 		s.Seed()
 
-		mockRepo.AssertExpectations(t)
-		mockRepo.AssertNotCalled(t, "InsertMultipleDepartments")
+		mockDepartmentRepo.AssertExpectations(t)
+		mockDepartmentRepo.AssertNotCalled(t, "InsertMultipleDepartments")
 	})
 }

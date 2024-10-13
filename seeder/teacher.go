@@ -1,7 +1,6 @@
 package seeder
 
 import (
-	"database/sql"
 	"fmt"
 	"math/rand"
 	"time"
@@ -16,16 +15,19 @@ import (
 )
 
 type teacherSeeder struct {
-	db *sql.DB
+	teacherRepo    repository.TeacherRepository
+	departmentRepo repository.DepartmentRepository
 }
 
-func NewTeacherSeeder(db *sql.DB) *teacherSeeder {
-	return &teacherSeeder{db: db}
+func NewTeacherSeeder(teacherRepo repository.TeacherRepository, departmentRepo repository.DepartmentRepository) *teacherSeeder {
+	return &teacherSeeder{
+		departmentRepo: departmentRepo,
+		teacherRepo:    teacherRepo,
+	}
 }
 
-func (s *teacherSeeder) TeacherSeeder(num int32) {
-	departmentRepository := repository.NewDepartmentRepository(s.db)
-	departmentIds := departmentRepository.GetDepartmentIDs()
+func (s *teacherSeeder) Seed(num int32) {
+	departmentIds := s.departmentRepo.GetDepartmentIDs()
 
 	var teacherModelLinks []model.Teacher
 	for range num {
@@ -41,7 +43,6 @@ func (s *teacherSeeder) TeacherSeeder(num int32) {
 		}
 		teacherModelLinks = append(teacherModelLinks, modelLink)
 	}
-	teacherRepository := repository.NewTeacherRepository(s.db)
-	teacherRepository.InsertMultipleTeachers(teacherModelLinks)
+	s.teacherRepo.InsertMultipleTeachers(teacherModelLinks)
 	fmt.Println("Finish seeding Teachers")
 }

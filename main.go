@@ -42,12 +42,13 @@ func main() {
 	case "up":
 		fmt.Println("----- Starting running seeders -----")
 		departmentRepo := repository.NewDepartmentRepository(db)
+		teacherRepo := repository.NewTeacherRepository(db)
 
-		teacherSeeder := seeder.NewTeacherSeeder(db)
+		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo)
 		departmentSeeder := seeder.NewDepartmentSeeder(departmentRepo)
 
 		departmentSeeder.Seed()
-		teacherSeeder.TeacherSeeder(teacherSize)
+		teacherSeeder.Seed(teacherSize)
 		seeder.CourseSeeder(db)
 		seeder.GradeSettingSeeder(db)
 		seeder.StudentSeeder(db, studentSize)
