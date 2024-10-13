@@ -1,15 +1,28 @@
 package seeder
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
-	"be-exerise-go-mod/repository"
 )
 
-func DepartmentSeeder(db *sql.DB) {
+type departmentRepository interface {
+	GetDepartmentIDs() []int32
+	InsertMultipleDepartments([]model.Department)
+}
+
+type departmentSeeder struct {
+	departmentRepo departmentRepository
+}
+
+func NewDepartmentSeeder(departmentRepo departmentRepository) *departmentSeeder {
+	return &departmentSeeder{
+		departmentRepo: departmentRepo,
+	}
+}
+
+func (s *departmentSeeder) Seed() {
 	departmentNames := []string{
 		"Computer Science",
 		"Biology",
@@ -22,12 +35,12 @@ func DepartmentSeeder(db *sql.DB) {
 		"Psychology",
 		"Political Science",
 	}
-	departmentRepository := repository.NewDepartmentRepository(db)
+
 	var departmentModelLinks []model.Department
-	departmentIds := departmentRepository.GetDepartmentIDs()
+	departmentIds := s.departmentRepo.GetDepartmentIDs()
+	now := time.Now().UTC()
 	if len(departmentIds) == 0 {
 		for _, name := range departmentNames {
-			now := time.Now().UTC()
 			modelLink := model.Department{
 				Name:      name,
 				CreatedAt: &now,
@@ -35,7 +48,7 @@ func DepartmentSeeder(db *sql.DB) {
 			}
 			departmentModelLinks = append(departmentModelLinks, modelLink)
 		}
-		departmentRepository.InsertMultipleDepartments(departmentModelLinks)
+		s.departmentRepo.InsertMultipleDepartments(departmentModelLinks)
 		fmt.Println("Finish seeding Department")
 	} else {
 		fmt.Println("Already created Departments.  Skipping....")

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"be-exerise-go-mod/repository"
 	"be-exerise-go-mod/seeder"
 	"be-exerise-go-mod/util"
 	"database/sql"
@@ -40,8 +41,12 @@ func main() {
 	switch command {
 	case "up":
 		fmt.Println("----- Starting running seeders -----")
+		departmentRepo := repository.NewDepartmentRepository(db)
+
 		teacherSeeder := seeder.NewTeacherSeeder(db)
-		seeder.DepartmentSeeder(db)
+		departmentSeeder := seeder.NewDepartmentSeeder(departmentRepo)
+
+		departmentSeeder.Seed()
 		teacherSeeder.TeacherSeeder(teacherSize)
 		seeder.CourseSeeder(db)
 		seeder.GradeSettingSeeder(db)
