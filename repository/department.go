@@ -13,6 +13,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type DepartmentRepository interface {
+	GetDepartmentIDs() []int32
+	InsertMultipleDepartments([]model.Department)
+	ClearAllDepartments()
+}
+
 type departmentRepository struct {
 	db *sql.DB
 }

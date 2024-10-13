@@ -13,6 +13,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type TeacherRepository interface {
+	GetAllTeachers() []model.Teacher
+	InsertMultipleTeachers(teachers []model.Teacher)
+	ClearAllTeachers()
+}
+
 type teacherRepository struct {
 	db *sql.DB
 }

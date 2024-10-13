@@ -5,18 +5,14 @@ import (
 	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
+	"be-exerise-go-mod/repository"
 )
 
-type departmentRepository interface {
-	GetDepartmentIDs() []int32
-	InsertMultipleDepartments([]model.Department)
-}
-
 type departmentSeeder struct {
-	departmentRepo departmentRepository
+	departmentRepo repository.DepartmentRepository
 }
 
-func NewDepartmentSeeder(departmentRepo departmentRepository) *departmentSeeder {
+func NewDepartmentSeeder(departmentRepo repository.DepartmentRepository) *departmentSeeder {
 	return &departmentSeeder{
 		departmentRepo: departmentRepo,
 	}
