@@ -45,15 +45,17 @@ func main() {
 		fmt.Println("----- Starting running seeders -----")
 		departmentRepo := repository.NewDepartmentRepository(db)
 		teacherRepo := repository.NewTeacherRepository(db)
+		studentRepo := repository.NewStudentRepository(db)
 
 		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo, gofakeit.New(0), rand.New(rand.NewSource(0)))
 		departmentSeeder := seeder.NewDepartmentSeeder(departmentRepo)
+		studentSeeder := seeder.NewStudentSeeder(studentRepo, departmentRepo, gofakeit.New(0), rand.New(rand.NewSource(0)))
 
 		departmentSeeder.Seed()
 		teacherSeeder.Seed(teacherSize)
 		seeder.CourseSeeder(db)
 		seeder.GradeSettingSeeder(db)
-		seeder.StudentSeeder(db, studentSize)
+		studentSeeder.Seed(studentSize)
 		seeder.EnrollmentSeeder(db)
 		seeder.AssignmentSeeder(db)
 		seeder.ExamSeeder(db)

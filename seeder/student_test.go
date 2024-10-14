@@ -9,60 +9,26 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type mockTeacherRepository struct {
+type mockStudentRepository struct {
 	mock.Mock
 }
 
-func (m *mockTeacherRepository) GetAllTeachers() []model.Teacher {
+func (m *mockStudentRepository) GetStudentIDs() []int32 {
 	args := m.Called()
-	return args.Get(0).([]model.Teacher)
+	return args.Get(0).([]int32)
 }
 
-func (m *mockTeacherRepository) InsertMultipleTeachers(teacherModel []model.Teacher) {
-	m.Called(teacherModel)
+func (m *mockStudentRepository) InsertMultipleStudents(studentModel []model.Student) {
+	m.Called(studentModel)
 }
 
-func (m *mockTeacherRepository) ClearAllTeachers() {
+func (m *mockStudentRepository) ClearAllStudents() {
 	m.Called()
 }
 
-// TODO: where to put these?
-type mockFaker struct {
-	mock.Mock
-}
-
-func (m *mockFaker) FirstName() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-func (m *mockFaker) LastName() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-func (m *mockFaker) DateRange(t1 time.Time, t2 time.Time) time.Time {
-	args := m.Called(t1, t2)
-	return args.Get(0).(time.Time)
-}
-
-func (m *mockFaker) Email() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-type mockRandomizer struct {
-	mock.Mock
-}
-
-func (m *mockRandomizer) Intn(n int) int {
-	args := m.Called(n)
-	return args.Int(0)
-}
-
-func TestTeacherSeed(t *testing.T) {
+func TestStudentSeed(t *testing.T) {
 	mockDepartmentRepo := new(mockDepartmentRepository)
-	mockTeacherRepo := new(mockTeacherRepository)
+	mockStudentRepo := new(mockStudentRepository)
 	mf := new(mockFaker)
 	mr := new(mockRandomizer)
 
@@ -71,16 +37,16 @@ func TestTeacherSeed(t *testing.T) {
 	lastName := "DEF"
 	email := "abc@def.com"
 	departmentId := int32(1)
-	expectedRes := []model.Teacher{
+	expectedRes := []model.Student{
 		{FirstName: firstName, LastName: lastName, Email: email, Dob: now, DepartmentID: &departmentId},
 	}
 	mockDepartmentRepo.On("GetDepartmentIDs").Return([]int32{departmentId})
-	mockTeacherRepo.On("InsertMultipleTeachers", mock.Anything).Run(func(args mock.Arguments) {
-		teacherModel := args[0].([]model.Teacher)
-		if len(teacherModel) != len(expectedRes) {
-			t.Errorf("Expected length of department model is %d, but got %d", len(expectedRes), len(teacherModel))
+	mockStudentRepo.On("InsertMultipleStudents", mock.Anything).Run(func(args mock.Arguments) {
+		studentModel := args[0].([]model.Student)
+		if len(studentModel) != len(expectedRes) {
+			t.Errorf("Expected length of department model is %d, but got %d", len(expectedRes), len(studentModel))
 		}
-		if !reflect.DeepEqual(teacherModel, expectedRes) {
+		if !reflect.DeepEqual(studentModel, expectedRes) {
 			t.Errorf("Input do not match")
 		}
 	})
@@ -89,8 +55,8 @@ func TestTeacherSeed(t *testing.T) {
 	mf.On("DateRange", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		t1 := args[0].(time.Time)
 		t2 := args[1].(time.Time)
-		t1ExpectedRes := now.AddDate(-70, 0, 0)
-		t2ExpectedRes := now.AddDate(-25, 0, 0)
+		t1ExpectedRes := now.AddDate(-50, 0, 0)
+		t2ExpectedRes := now.AddDate(-20, 0, 0)
 		if t1.Day() != t1ExpectedRes.Day() || t1.Month() != t1ExpectedRes.Month() || t1.Year() != t1ExpectedRes.Year() {
 			t.Errorf("args %s do not match, expected %s, got %s", "t1", t1ExpectedRes.Format("2006-01-02"), t1.Format("2006-01-02"))
 		}
@@ -105,9 +71,9 @@ func TestTeacherSeed(t *testing.T) {
 			t.Errorf("incorrect length passed, expected %d, got %d", len(expectedRes), n)
 		}
 	}).Return(0)
-	s := NewTeacherSeeder(mockTeacherRepo, mockDepartmentRepo, mf, mr)
+	s := NewStudentSeeder(mockStudentRepo, mockDepartmentRepo, mf, mr)
 	s.Seed(1)
 
-	mockTeacherRepo.AssertExpectations(t)
+	mockStudentRepo.AssertExpectations(t)
 	mf.AssertExpectations(t)
 }

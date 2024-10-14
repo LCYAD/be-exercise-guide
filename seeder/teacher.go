@@ -2,7 +2,6 @@ package seeder
 
 import (
 	"fmt"
-	"math/rand"
 	"time"
 
 	"be-exerise-go-mod/repository"
@@ -55,7 +54,7 @@ func (s *teacherSeeder) Seed(num int32) {
 			LastName:     s.faker.LastName(),
 			Dob:          s.faker.DateRange(now.AddDate(-70, 0, 0), now.AddDate(-25, 0, 0)),
 			Email:        s.faker.Email(),
-			DepartmentID: &departmentIds[rand.Intn(len(departmentIds))],
+			DepartmentID: &departmentIds[s.randomizer.Intn(len(departmentIds))],
 		}
 		teacherModelLinks = append(teacherModelLinks, modelLink)
 	}
