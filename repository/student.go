@@ -13,6 +13,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type StudentRepository interface {
+	GetStudentIDs() []int32
+	InsertMultipleStudents(students []model.Student)
+	ClearAllStudents()
+}
+
 type studentRepository struct {
 	db *sql.DB
 }
