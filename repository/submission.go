@@ -101,8 +101,6 @@ func (r *submissionRepository) InsertMultipleSubmissions(submissions []model.Sub
 		Submission.AssignmentID,
 		Submission.ExamID,
 		Submission.SubmittedAt,
-		Submission.CreatedAt,
-		Submission.UpdatedAt,
 	).MODELS(submissions)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

@@ -39,8 +39,6 @@ func ExamSeeder(db *sql.DB) {
 				StartedAt:  &examStartAt,
 				FinishedAt: &finishedTime,
 				CourseID:   &courseID,
-				CreatedAt:  &now,
-				UpdatedAt:  &now,
 			}
 			examModelLinks = append(examModelLinks, modelLink)
 			nextTestDate = nextTestDate.AddDate(0, 0, rand.Intn(50)+30)

@@ -66,8 +66,6 @@ func (r *assignmentRepository) InsertMultipleAssignments(assignments []model.Ass
 		Assignment.DueDate,
 		Assignment.Graded,
 		Assignment.CourseID,
-		Assignment.CreatedAt,
-		Assignment.UpdatedAt,
 	).MODELS(assignments)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

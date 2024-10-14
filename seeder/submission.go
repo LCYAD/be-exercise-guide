@@ -21,7 +21,6 @@ func SubmissionSeeder(db *sql.DB) {
 	assignmentRepo := repository.NewAssignmentRepository(db)
 	enrollmentRepository := repository.NewEnrollmentRepository(db)
 	var submissionModelLinks []model.Submission
-	now := time.Now().UTC()
 
 	for _, courseId := range courseIDs {
 		studentIDs := enrollmentRepository.GetStudentIDsEnrolledInCourse(courseId)
@@ -36,8 +35,6 @@ func SubmissionSeeder(db *sql.DB) {
 						StudentID:    &studentId,
 						AssignmentID: &assignment.ID,
 						SubmittedAt:  submissionTime,
-						CreatedAt:    &now,
-						UpdatedAt:    &now,
 					}
 					submissionModelLinks = append(submissionModelLinks, modelLink)
 				}
@@ -52,8 +49,6 @@ func SubmissionSeeder(db *sql.DB) {
 						ExamID:    &exam.ID,
 						// assumption is that most people at the exam hall will submit at the end of the exam
 						SubmittedAt: *exam.FinishedAt,
-						CreatedAt:   &now,
-						UpdatedAt:   &now,
 					}
 					submissionModelLinks = append(submissionModelLinks, modelLink)
 				}

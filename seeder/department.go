@@ -2,7 +2,6 @@ package seeder
 
 import (
 	"fmt"
-	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
 	"be-exerise-go-mod/repository"
@@ -34,13 +33,11 @@ func (s *departmentSeeder) Seed() {
 
 	var departmentModelLinks []model.Department
 	departmentIds := s.departmentRepo.GetDepartmentIDs()
-	now := time.Now().UTC()
+
 	if len(departmentIds) == 0 {
 		for _, name := range departmentNames {
 			modelLink := model.Department{
-				Name:      name,
-				CreatedAt: &now,
-				UpdatedAt: &now,
+				Name: name,
 			}
 			departmentModelLinks = append(departmentModelLinks, modelLink)
 		}

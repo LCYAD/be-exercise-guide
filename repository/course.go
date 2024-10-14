@@ -64,8 +64,6 @@ func (r *courseRepository) InsertMultipleCourses(departments []model.Course) {
 		Course.Description,
 		Course.DepartmentID,
 		Course.TeacherID,
-		Course.CreatedAt,
-		Course.UpdatedAt,
 	).MODELS(departments)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

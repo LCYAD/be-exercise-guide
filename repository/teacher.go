@@ -50,8 +50,6 @@ func (r *teacherRepository) InsertMultipleTeachers(teachers []model.Teacher) {
 		Teacher.Dob,
 		Teacher.Email,
 		Teacher.DepartmentID,
-		Teacher.CreatedAt,
-		Teacher.UpdatedAt,
 	).MODELS(teachers)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

@@ -27,8 +27,6 @@ func (r *gradeSettingRepository) InsertMultipleGradeSettings(gradeSettings []mod
 		GradeSetting.ExamPercent,
 		GradeSetting.PassingGrade,
 		GradeSetting.CourseID,
-		GradeSetting.CreatedAt,
-		GradeSetting.UpdatedAt,
 	).MODELS(gradeSettings)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

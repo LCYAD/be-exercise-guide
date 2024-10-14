@@ -44,7 +44,7 @@ func (r *scoreRepository) GetScoreIDs() []int32 {
 }
 
 func (r *scoreRepository) InsertMultipleScores(scores []model.Score) {
-	insertStmt := Score.INSERT(Score.Value, Score.TeacherID, Score.SubmissionID, Score.CreatedAt, Score.UpdatedAt).MODELS(scores)
+	insertStmt := Score.INSERT(Score.Value, Score.TeacherID, Score.SubmissionID).MODELS(scores)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }

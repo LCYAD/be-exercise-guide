@@ -65,8 +65,6 @@ func (r *examRepository) InsertMultipleExams(exams []model.Exam) {
 		Exam.StartedAt,
 		Exam.FinishedAt,
 		Exam.CourseID,
-		Exam.CreatedAt,
-		Exam.UpdatedAt,
 	).MODELS(exams)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
