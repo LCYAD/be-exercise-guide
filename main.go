@@ -6,8 +6,10 @@ import (
 	"be-exerise-go-mod/util"
 	"database/sql"
 	"fmt"
+	"math/rand"
 	"os"
 
+	"github.com/brianvoe/gofakeit/v7"
 	_ "github.com/lib/pq"
 )
 
@@ -44,7 +46,7 @@ func main() {
 		departmentRepo := repository.NewDepartmentRepository(db)
 		teacherRepo := repository.NewTeacherRepository(db)
 
-		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo)
+		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo, gofakeit.New(0), rand.New(rand.NewSource(0)))
 		departmentSeeder := seeder.NewDepartmentSeeder(departmentRepo)
 
 		departmentSeeder.Seed()
