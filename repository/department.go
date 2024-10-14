@@ -55,7 +55,7 @@ func (r *departmentRepository) GetDepartmentIDs() []int32 {
 }
 
 func (r *departmentRepository) InsertMultipleDepartments(departments []model.Department) {
-	insertStmt := Department.INSERT(Department.Name, Department.CreatedAt, Department.UpdatedAt).MODELS(departments)
+	insertStmt := Department.INSERT(Department.Name).MODELS(departments)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }

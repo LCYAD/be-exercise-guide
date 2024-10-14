@@ -44,7 +44,13 @@ func (r *studentRepository) GetStudentIDs() []int32 {
 }
 
 func (r *studentRepository) InsertMultipleStudents(students []model.Student) {
-	insertStmt := Student.INSERT(Student.FirstName, Student.LastName, Student.Dob, Student.Email, Student.DepartmentID, Student.CreatedAt, Student.UpdatedAt).MODELS(students)
+	insertStmt := Student.INSERT(
+		Student.FirstName,
+		Student.LastName,
+		Student.Dob,
+		Student.Email,
+		Student.DepartmentID,
+	).MODELS(students)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)
 }

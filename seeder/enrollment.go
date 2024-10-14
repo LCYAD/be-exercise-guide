@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"math/rand"
-	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
 	"be-exerise-go-mod/repository"
@@ -24,15 +23,12 @@ func EnrollmentSeeder(db *sql.DB) {
 	for _, studentID := range studentIDs {
 		coursesEnroll := rand.Intn(5) + minCourseEnroll
 		pickedCourseIDs := pickRandomIDs(courseIDs, coursesEnroll)
-		now := time.Now().UTC()
 		for _, cIDs := range pickedCourseIDs {
 			if !enrollmentRepository.IsStudentEnrolledInCourse(studentID, cIDs) {
 				modelLink := model.Enrollment{
 					StudentID: &studentID,
 					CourseID:  &cIDs,
 					Approved:  &approvedOption[rand.Intn(len(approvedOption))],
-					CreatedAt: &now,
-					UpdatedAt: &now,
 				}
 				enrollmentModelLinks = append(enrollmentModelLinks, modelLink)
 			}

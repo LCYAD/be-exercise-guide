@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"math/rand"
-	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
 	"be-exerise-go-mod/repository"
@@ -30,7 +29,6 @@ func CourseSeeder(db *sql.DB) {
 			teachersByDepartment[deptID] = append(teachersByDepartment[deptID], int32(teacher.ID))
 		}
 
-		now := time.Now().UTC()
 		for _, d := range departments {
 			courses := departmentCourses[d.Name]
 			for _, c := range courses {
@@ -42,8 +40,6 @@ func CourseSeeder(db *sql.DB) {
 					Description:  &description,
 					DepartmentID: &d.ID,
 					TeacherID:    &teachersByDepartment[d.ID][rand.Intn(len(teachersByDepartment[d.ID]))],
-					CreatedAt:    &now,
-					UpdatedAt:    &now,
 				}
 				courseModelLinks = append(courseModelLinks, modelLink)
 			}

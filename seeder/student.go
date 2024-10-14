@@ -28,8 +28,6 @@ func StudentSeeder(db *sql.DB, num int32) {
 			Dob:          gofakeit.DateRange(now.AddDate(-50, 0, 0), now.AddDate(-20, 0, 0)),
 			Email:        gofakeit.Email(),
 			DepartmentID: &departmentIds[rand.Intn(len(departmentIds))],
-			CreatedAt:    &now,
-			UpdatedAt:    &now,
 		}
 		studentModelLinks = append(studentModelLinks, modelLink)
 	}

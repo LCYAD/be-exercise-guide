@@ -75,12 +75,12 @@ func TestTeacherSeed(t *testing.T) {
 	mockTeacherRepo.On("InsertMultipleTeachers", mock.Anything).Run(func(args mock.Arguments) {
 		teacherModel := args[0].([]model.Teacher)
 		expectedRes := []model.Teacher{
-			{FirstName: firstName, LastName: lastName, Email: email, Dob: now, DepartmentID: &departmentId, CreatedAt: &now, UpdatedAt: &now},
+			{FirstName: firstName, LastName: lastName, Email: email, Dob: now, DepartmentID: &departmentId},
 		}
 		if len(teacherModel) != len(expectedRes) {
 			t.Errorf("Expected length of department model is %d, but got %d", len(expectedRes), len(teacherModel))
 		}
-		if reflect.DeepEqual(teacherModel, expectedRes) {
+		if !reflect.DeepEqual(teacherModel, expectedRes) {
 			t.Errorf("Input do not match")
 		}
 	})

@@ -64,8 +64,6 @@ func (r *enrollmentRepository) InsertMultipleEnrollments(enrollments []model.Enr
 		Enrollment.StudentID,
 		Enrollment.CourseID,
 		Enrollment.Approved,
-		Enrollment.CreatedAt,
-		Enrollment.UpdatedAt,
 	).MODELS(enrollments)
 	_, err := insertStmt.Exec(r.db)
 	util.PanicOnError(err)

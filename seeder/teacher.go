@@ -56,8 +56,6 @@ func (s *teacherSeeder) Seed(num int32) {
 			Dob:          s.faker.DateRange(now.AddDate(-70, 0, 0), now.AddDate(-25, 0, 0)),
 			Email:        s.faker.Email(),
 			DepartmentID: &departmentIds[rand.Intn(len(departmentIds))],
-			CreatedAt:    &now,
-			UpdatedAt:    &now,
 		}
 		teacherModelLinks = append(teacherModelLinks, modelLink)
 	}

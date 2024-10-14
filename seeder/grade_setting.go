@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"math/rand"
-	"time"
 
 	"be-exerise-go-mod/.gen/be-exercise/public/model"
 	"be-exerise-go-mod/repository"
@@ -15,7 +14,6 @@ func GradeSettingSeeder(db *sql.DB) {
 	gradeSettingRepository := repository.NewGradeSettingRepository(db)
 	courseIDs := courseRepository.GetCourseIDs()
 	var gradeSettingModelLinks []model.GradeSetting
-	now := time.Now().UTC()
 
 	assignmentPercentRandomChoice := []int32{20, 25, 30, 35, 40, 45}
 	passingGradeRandomChoice := []int32{60, 65, 70, 75, 80}
@@ -27,8 +25,6 @@ func GradeSettingSeeder(db *sql.DB) {
 			ExamPercent:       100 - assignmentPercent,
 			PassingGrade:      passingGradeRandomChoice[rand.Intn(len(passingGradeRandomChoice))],
 			CourseID:          &courseID,
-			CreatedAt:         &now,
-			UpdatedAt:         &now,
 		}
 		gradeSettingModelLinks = append(gradeSettingModelLinks, modelLink)
 	}

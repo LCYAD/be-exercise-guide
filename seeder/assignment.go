@@ -45,8 +45,6 @@ func AssignmentSeeder(db *sql.DB) {
 				DueDate:     now.AddDate(0, 0, daysToAdd),
 				CourseID:    &courseID,
 				Graded:      &gradedOption[rand.Intn(len(gradedOption))],
-				CreatedAt:   &now,
-				UpdatedAt:   &now,
 			}
 			assignmentModelLinks = append(assignmentModelLinks, modelLink)
 		}
