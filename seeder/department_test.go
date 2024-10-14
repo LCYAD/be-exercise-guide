@@ -47,8 +47,8 @@ func TestDepartmentSeed(t *testing.T) {
 				{Name: "Psychology", CreatedAt: &now, UpdatedAt: &now},
 				{Name: "Political Science", CreatedAt: &now, UpdatedAt: &now},
 			}
-			if len(departmentModel) != 10 {
-				t.Errorf("Expected length of department model is %d, but got %d", 10, len(departmentModel))
+			if len(departmentModel) != len(expectedRes) {
+				t.Errorf("Expected length of department model is %d, but got %d", len(expectedRes), len(departmentModel))
 			}
 			if reflect.DeepEqual(departmentModel, expectedRes) {
 				t.Errorf("Input do not match")
