@@ -14,6 +14,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type SubmissionRepository interface {
+	GetSubmissionIDsAndDepartmentIDs() []SubmissionRes
+	InsertMultipleSubmissions(submissions []model.Submission)
+	ClearAllSubmissions()
+}
+
 type submissionRepository struct {
 	db *sql.DB
 }

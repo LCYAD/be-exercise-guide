@@ -13,6 +13,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type AssignmentRepository interface {
+	GetAssignmentIDs() []int32
+	GetAssignmentsByCourseID(courseID int32) []model.Assignment
+	InsertMultipleAssignments(assignments []model.Assignment)
+	ClearAllAssignments()
+}
+
 type assignmentRepository struct {
 	db *sql.DB
 }

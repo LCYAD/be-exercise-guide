@@ -13,6 +13,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type EnrollmentRepository interface {
+	IsStudentEnrolledInCourse(studentID int32, courseID int32) bool
+	GetStudentIDsEnrolledInCourse(courseID int32) []int32
+	InsertMultipleEnrollments(enrollments []model.Enrollment)
+	ClearAllEnrollments()
+}
+
 type enrollmentRepository struct {
 	db *sql.DB
 }

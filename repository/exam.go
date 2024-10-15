@@ -13,6 +13,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type ExamRepository interface {
+	GetExamIDs() []int32
+	GetExamsByCourseID(courseID int32) []model.Exam
+	InsertMultipleExams(exams []model.Exam)
+	ClearAllExams()
+}
+
 type examRepository struct {
 	db *sql.DB
 }

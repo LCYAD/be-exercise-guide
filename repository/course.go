@@ -13,6 +13,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type CourseRepository interface {
+	GetCourseIDs() []int32
+	CourseExists() bool
+	InsertMultipleCourses(departments []model.Course)
+	ClearAllCourses()
+}
+
 type courseRepository struct {
 	db *sql.DB
 }
