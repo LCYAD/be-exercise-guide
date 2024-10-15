@@ -11,6 +11,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type GradeSettingRepository interface {
+	InsertMultipleGradeSettings(gradeSettings []model.GradeSetting)
+	ClearAllGradeSettings()
+}
+
 type gradeSettingRepository struct {
 	db *sql.DB
 }

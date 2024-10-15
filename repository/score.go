@@ -13,6 +13,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type ScoreRepository interface {
+	GetScoreIDs() []int32
+	InsertMultipleScores(scores []model.Score)
+	ClearAllScores()
+}
+
 type scoreRepository struct {
 	db *sql.DB
 }
