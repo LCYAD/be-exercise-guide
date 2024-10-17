@@ -43,13 +43,20 @@ func main() {
 	switch command {
 	case "up":
 		fmt.Println("----- Starting running seeders -----")
+
+		faker := gofakeit.New(0)
+		randomizer := rand.New(rand.NewSource(0))
+
 		departmentRepo := repository.NewDepartmentRepository(db)
 		teacherRepo := repository.NewTeacherRepository(db)
 		studentRepo := repository.NewStudentRepository(db)
+		assignmentRepo := repository.NewAssignmentRepository(db)
+		courseRepo := repository.NewCourseRepository(db)
 
-		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo, gofakeit.New(0), rand.New(rand.NewSource(0)))
+		teacherSeeder := seeder.NewTeacherSeeder(teacherRepo, departmentRepo, faker, randomizer)
 		departmentSeeder := seeder.NewDepartmentSeeder(departmentRepo)
-		studentSeeder := seeder.NewStudentSeeder(studentRepo, departmentRepo, gofakeit.New(0), rand.New(rand.NewSource(0)))
+		studentSeeder := seeder.NewStudentSeeder(studentRepo, departmentRepo, faker, randomizer)
+		assignmentSeeder := seeder.NewAssignmentSeeder(assignmentRepo, courseRepo, faker, randomizer)
 
 		departmentSeeder.Seed()
 		teacherSeeder.Seed(teacherSize)
@@ -57,7 +64,7 @@ func main() {
 		seeder.GradeSettingSeeder(db)
 		studentSeeder.Seed(studentSize)
 		seeder.EnrollmentSeeder(db)
-		seeder.AssignmentSeeder(db)
+		assignmentSeeder.Seed()
 		seeder.ExamSeeder(db)
 		seeder.SubmissionSeeder(db)
 		seeder.ScoreSeeder(db)
