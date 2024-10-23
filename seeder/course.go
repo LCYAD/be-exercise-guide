@@ -1,7 +1,6 @@
 package seeder
 
 import (
-	"database/sql"
 	"fmt"
 	"math/rand"
 
@@ -11,16 +10,31 @@ import (
 	"github.com/brianvoe/gofakeit/v7"
 )
 
-func CourseSeeder(db *sql.DB) {
-	courseRepository := repository.NewCourseRepository(db)
-	if courseRepository.CourseExists() {
+type courseSeeder struct {
+	courseRepo     repository.CourseRepository
+	departmentRepo repository.DepartmentRepository
+	teacherRepo    repository.TeacherRepository
+}
+
+func NewCourseSeeder(
+	courseRepo repository.CourseRepository,
+	departmentRepo repository.DepartmentRepository,
+	teacherRepo repository.TeacherRepository,
+) *courseSeeder {
+	return &courseSeeder{
+		courseRepo:     courseRepo,
+		departmentRepo: departmentRepo,
+		teacherRepo:    teacherRepo,
+	}
+}
+
+func (s *courseSeeder) Seed() {
+	if s.courseRepo.CourseExists() {
 		fmt.Println("Already created Courses.  Skipping....")
 	} else {
 		var courseModelLinks []model.Course
-		departmentRepository := repository.NewDepartmentRepository(db)
-		departments := departmentRepository.GetAllDepartments()
-		teacherRepository := repository.NewTeacherRepository(db)
-		teachers := teacherRepository.GetAllTeachers()
+		departments := s.departmentRepo.GetAllDepartments()
+		teachers := s.teacherRepo.GetAllTeachers()
 
 		// group teacher by department
 		teachersByDepartment := make(map[int32][]int32)
@@ -45,7 +59,7 @@ func CourseSeeder(db *sql.DB) {
 			}
 
 		}
-		courseRepository.InsertMultipleCourses(courseModelLinks)
+		s.courseRepo.InsertMultipleCourses(courseModelLinks)
 		fmt.Println("Finish seeding Course")
 	}
 }
