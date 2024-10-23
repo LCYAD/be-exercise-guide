@@ -1,7 +1,6 @@
 package seeder
 
 import (
-	"database/sql"
 	"fmt"
 	"math/rand"
 
@@ -9,12 +8,27 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
-func ScoreSeeder(db *sql.DB) {
-	teacherRepository := repository.NewTeacherRepository(db)
-	scoreRepository := repository.NewScoreRepository(db)
-	submissionRepository := repository.NewSubmissionRepository(db)
-	teachers := teacherRepository.GetAllTeachers()
-	submissions := submissionRepository.GetSubmissionIDsAndDepartmentIDs()
+type scoreSeeder struct {
+	scoreRepo      repository.ScoreRepository
+	teacherRepo    repository.TeacherRepository
+	submissionRepo repository.SubmissionRepository
+}
+
+func NewScoreSeeder(
+	scoreRepo repository.ScoreRepository,
+	teacherRepo repository.TeacherRepository,
+	submissionRepo repository.SubmissionRepository,
+) *scoreSeeder {
+	return &scoreSeeder{
+		scoreRepo:      scoreRepo,
+		teacherRepo:    teacherRepo,
+		submissionRepo: submissionRepo,
+	}
+}
+
+func (s *scoreSeeder) Seed() {
+	teachers := s.teacherRepo.GetAllTeachers()
+	submissions := s.submissionRepo.GetSubmissionIDsAndDepartmentIDs()
 
 	// group teacher by department
 	teachersByDepartment := make(map[int32][]int32)
@@ -46,7 +60,7 @@ func ScoreSeeder(db *sql.DB) {
 			end = len(scoreModelLinks)
 		}
 		batch := scoreModelLinks[i:end]
-		scoreRepository.InsertMultipleScores(batch)
+		s.scoreRepo.InsertMultipleScores(batch)
 	}
 
 	fmt.Println("Finish seeding Score")

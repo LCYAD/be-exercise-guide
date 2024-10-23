@@ -12,6 +12,11 @@ type mockDepartmentRepository struct {
 	mock.Mock
 }
 
+func (m *mockDepartmentRepository) GetAllDepartments() []model.Department {
+	args := m.Called()
+	return args.Get(0).([]model.Department)
+}
+
 func (m *mockDepartmentRepository) GetDepartmentIDs() []int32 {
 	args := m.Called()
 	return args.Get(0).([]int32)

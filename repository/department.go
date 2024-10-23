@@ -14,6 +14,7 @@ import (
 )
 
 type DepartmentRepository interface {
+	GetAllDepartments() []model.Department
 	GetDepartmentIDs() []int32
 	InsertMultipleDepartments([]model.Department)
 	ClearAllDepartments()
