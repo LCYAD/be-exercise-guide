@@ -11,6 +11,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type StudentSeeder interface {
+	Seed(num int32)
+	Deseed()
+}
+
 type studentSeeder struct {
 	studentRepo    repository.StudentRepository
 	departmentRepo repository.DepartmentRepository
@@ -50,4 +55,8 @@ func (s *studentSeeder) Seed(num int32) {
 
 	s.studentRepo.InsertMultipleStudents(studentModelLinks)
 	fmt.Println("Finish seeding Students")
+}
+
+func (s *studentSeeder) Deseed() {
+	s.studentRepo.ClearAllStudents()
 }

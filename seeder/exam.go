@@ -9,6 +9,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type ExamSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type examSeeder struct {
 	examRepo   repository.ExamRepository
 	courseRepo repository.CourseRepository
@@ -58,4 +63,8 @@ func (s *examSeeder) Seed() {
 	}
 	s.examRepo.InsertMultipleExams(examModelLinks)
 	fmt.Println("Finish seeding Exam")
+}
+
+func (s *examSeeder) Deseed() {
+	s.examRepo.ClearAllExams()
 }

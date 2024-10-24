@@ -8,6 +8,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type EnrollmentSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type enrollmentSeeder struct {
 	enrollmentRepo repository.EnrollmentRepository
 	studentRepo    repository.StudentRepository
@@ -66,4 +71,8 @@ func pickRandomIDs(arr []int32, count int) []int32 {
 		count = len(temp)
 	}
 	return temp[:count]
+}
+
+func (s *enrollmentSeeder) Deseed() {
+	s.enrollmentRepo.ClearAllEnrollments()
 }

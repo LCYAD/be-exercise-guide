@@ -9,6 +9,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type SubmissionSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type submissionSeeder struct {
 	submissionRepo repository.SubmissionRepository
 	courseRepo     repository.CourseRepository
@@ -87,4 +92,8 @@ func (s *submissionSeeder) Seed() {
 	}
 
 	fmt.Println("Finish seeding Submission")
+}
+
+func (s *submissionSeeder) Deseed() {
+	s.submissionRepo.ClearAllSubmissions()
 }

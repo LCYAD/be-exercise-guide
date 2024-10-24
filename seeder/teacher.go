@@ -11,6 +11,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type TeacherSeeder interface {
+	Seed(num int32)
+	Deseed()
+}
+
 type faker interface {
 	FirstName() string
 	LastName() string
@@ -60,4 +65,8 @@ func (s *teacherSeeder) Seed(num int32) {
 	}
 	s.teacherRepo.InsertMultipleTeachers(teacherModelLinks)
 	fmt.Println("Finish seeding Teachers")
+}
+
+func (s *teacherSeeder) Deseed() {
+	s.teacherRepo.ClearAllTeachers()
 }

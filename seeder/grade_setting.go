@@ -8,6 +8,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type GradeSettingSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type gradeSettingSeeder struct {
 	gradeSettingRepo repository.GradeSettingRepository
 	courseRepo       repository.CourseRepository
@@ -42,4 +47,8 @@ func (s *gradeSettingSeeder) Seed() {
 	}
 	s.gradeSettingRepo.InsertMultipleGradeSettings(gradeSettingModelLinks)
 	fmt.Println("Finish seeding GradeSetting")
+}
+
+func (s *gradeSettingSeeder) Deseed() {
+	s.gradeSettingRepo.ClearAllGradeSettings()
 }

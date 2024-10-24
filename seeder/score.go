@@ -8,6 +8,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type ScoreSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type scoreSeeder struct {
 	scoreRepo      repository.ScoreRepository
 	teacherRepo    repository.TeacherRepository
@@ -64,4 +69,8 @@ func (s *scoreSeeder) Seed() {
 	}
 
 	fmt.Println("Finish seeding Score")
+}
+
+func (s *scoreSeeder) Deseed() {
+	s.scoreRepo.ClearAllScores()
 }
