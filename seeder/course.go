@@ -10,6 +10,11 @@ import (
 	"github.com/brianvoe/gofakeit/v7"
 )
 
+type CoursetSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type courseSeeder struct {
 	courseRepo     repository.CourseRepository
 	departmentRepo repository.DepartmentRepository
@@ -62,6 +67,10 @@ func (s *courseSeeder) Seed() {
 		s.courseRepo.InsertMultipleCourses(courseModelLinks)
 		fmt.Println("Finish seeding Course")
 	}
+}
+
+func (s *courseSeeder) Deseed() {
+	s.courseRepo.ClearAllCourses()
 }
 
 var departmentCourses = map[string][]string{

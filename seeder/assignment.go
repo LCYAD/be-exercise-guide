@@ -11,6 +11,11 @@ import (
 	"github.com/brianvoe/gofakeit/v7"
 )
 
+type AssignmentSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type assignmentSeeder struct {
 	assignmentRepo repository.AssignmentRepository
 	courseRepo     repository.CourseRepository
@@ -72,4 +77,8 @@ func (s *assignmentSeeder) Seed() {
 
 	s.assignmentRepo.InsertMultipleAssignments(assignmentModelLinks)
 	fmt.Println("Finish seeding Assignment")
+}
+
+func (s *assignmentSeeder) Deseed() {
+	s.assignmentRepo.ClearAllAssignments()
 }

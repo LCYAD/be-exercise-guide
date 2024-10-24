@@ -7,6 +7,11 @@ import (
 	"be-exerise-go-mod/repository"
 )
 
+type DepartmentSeeder interface {
+	Seed()
+	Deseed()
+}
+
 type departmentSeeder struct {
 	departmentRepo repository.DepartmentRepository
 }
@@ -46,4 +51,8 @@ func (s *departmentSeeder) Seed() {
 	} else {
 		fmt.Println("Already created Departments.  Skipping....")
 	}
+}
+
+func (s *departmentSeeder) Deseed() {
+	s.departmentRepo.ClearAllDepartments()
 }
